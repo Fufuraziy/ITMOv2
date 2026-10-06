@@ -1,0 +1,49 @@
+# OpenCode 1.18.34 в WSL Ubuntu, 2026-10-06 18:43
+
+$ opencode debug skill   (вывод сокращён до name/location)
+- customize-opencode: <built-in>
+- tdd-go: /mnt/c/Users/Dragon/Documents/ITMO/vibecoding/.claude/skills/tdd-go/SKILL.md
+
+$ opencode mcp list
+
+┌  MCP Servers
+│
+●  ✓ vkusvill connected
+│      https://mcp001.vkusvill.ru/mcp
+│
+●  ✗ vv-collections failed
+│      Executable not found in $PATH: "node"
+│      node mcp/vv-collections/server.js
+│
+└  2 server(s)
+
+
+# После scripts/wsl-shims.sh (Linux Node 20 + шимы на Windows go.exe в .tools/), 2026-10-06 19:02
+$ PATH="$PWD/.tools/wsl-bin:$PATH" opencode mcp list
+
+┌  MCP Servers
+│
+●  ✓ vkusvill connected
+│      https://mcp001.vkusvill.ru/mcp
+│
+●  ✓ vv-collections connected
+│      node mcp/vv-collections/server.js
+│
+└  2 server(s)
+
+
+$ bash scripts/check.sh backend mcp skill hooks   # тот же runner внутри WSL
+[backend]
+  ok   gofmt
+  ok   go vet
+  ok   go test
+[mcp]
+  ok   node --test (vv-collections)
+[skill]
+  ok   node --test (tdd-go)
+[hooks]
+  ok   node --test (scripts/hooks)
+CHECK PASS (backend mcp skill hooks)
+
+# Ограничение: opencode run -m opencode/big-pickle зависает после 'init' даже в пустом /tmp
+# (OpenCode 1.18.34 + WSL1, ядро 4.4.0-19041-Microsoft), агентный показ — в Claude Code: живые ответы hook в 02-hook-log.md, прогон с нуля — docs/demo-prompt.md.
