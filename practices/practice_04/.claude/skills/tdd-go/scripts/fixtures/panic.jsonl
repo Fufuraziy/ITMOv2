@@ -1,0 +1,23 @@
+{"Time":"2026-10-06T18:28:09.043111+03:00","Action":"start","Package":"example.com/fix"}
+{"Time":"2026-10-06T18:28:10.8514959+03:00","Action":"run","Package":"example.com/fix","Test":"TestDiv"}
+{"Time":"2026-10-06T18:28:10.8519953+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"=== RUN   TestDiv\n","OutputType":"frame"}
+{"Time":"2026-10-06T18:28:10.8519953+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"--- FAIL: TestDiv (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-10-06T18:28:10.8541895+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"panic: runtime error: invalid memory address or nil pointer dereference [recovered, repanicked]\n"}
+{"Time":"2026-10-06T18:28:10.8550458+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"[signal 0xc0000005 code=0x0 addr=0x0 pc=0x7ff6f9fd7a90]\n"}
+{"Time":"2026-10-06T18:28:10.8550458+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"\n"}
+{"Time":"2026-10-06T18:28:10.8550458+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"goroutine 35 [running]:\n"}
+{"Time":"2026-10-06T18:28:10.8550458+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"testing.tRunner.func1.2({0x7ff6fa152bd0, 0x7ff6fa18b530})\n"}
+{"Time":"2026-10-06T18:28:10.8550458+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"\tC:/Users/Dragon/Documents/ITMO/vibecoding/.tools/go/src/testing/testing.go:2123 +0x239\n"}
+{"Time":"2026-10-06T18:28:10.8550458+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"testing.tRunner.func1()\n"}
+{"Time":"2026-10-06T18:28:10.8550458+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"\tC:/Users/Dragon/Documents/ITMO/vibecoding/.tools/go/src/testing/testing.go:2126 +0x329\n"}
+{"Time":"2026-10-06T18:28:10.8550458+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"panic({0x7ff6fa152bd0?, 0x7ff6fa18b530?})\n"}
+{"Time":"2026-10-06T18:28:10.8550458+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"\tC:/Users/Dragon/Documents/ITMO/vibecoding/.tools/go/src/runtime/panic.go:859 +0x125\n"}
+{"Time":"2026-10-06T18:28:10.8554999+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"example.com/fix.TestDiv(0x19f6df3e2200)\n"}
+{"Time":"2026-10-06T18:28:10.8554999+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"\tC:/Users/Dragon/AppData/Local/Temp/claude/C--Users-Dragon-Documents-ITMO-vibecoding/1672f3b8-2f58-42ae-9a5e-d3be3c6b6457/scratchpad/gofix/calc_test.go:27 +0x30\n"}
+{"Time":"2026-10-06T18:28:10.8554999+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"testing.tRunner(0x19f6df3e2200, 0x7ff6fa170a70)\n"}
+{"Time":"2026-10-06T18:28:10.8554999+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"\tC:/Users/Dragon/Documents/ITMO/vibecoding/.tools/go/src/testing/testing.go:2193 +0xc3\n"}
+{"Time":"2026-10-06T18:28:10.8554999+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"created by testing.(*T).Run in goroutine 1\n"}
+{"Time":"2026-10-06T18:28:10.8554999+03:00","Action":"output","Package":"example.com/fix","Test":"TestDiv","Output":"\tC:/Users/Dragon/Documents/ITMO/vibecoding/.tools/go/src/testing/testing.go:2258 +0x4b4\n"}
+{"Time":"2026-10-06T18:28:10.8583613+03:00","Action":"fail","Package":"example.com/fix","Test":"TestDiv","Elapsed":0}
+{"Time":"2026-10-06T18:28:10.858496+03:00","Action":"output","Package":"example.com/fix","Output":"FAIL\texample.com/fix\t1.815s\n","OutputType":"frame"}
+{"Time":"2026-10-06T18:28:10.8585416+03:00","Action":"fail","Package":"example.com/fix","Elapsed":1.815}

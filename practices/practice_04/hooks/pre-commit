@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# git pre-commit: тот же runner, что и hook агента после правки.
+# Установка (после git init): git config core.hooksPath hooks
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+echo "[pre-commit] sh scripts/check.sh"
+exec bash "$ROOT/scripts/check.sh"
