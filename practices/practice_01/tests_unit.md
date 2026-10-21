@@ -1,6 +1,8 @@
 # Unit-проверки
 
-| Требование или правило | Что проверяем изолированно | Вход | Ожидаемый результат | Evidence |
+Файл ведёт OpenCode. Обсудите с агентом содержание и проверьте предложенный diff. Все дополнения и исправления поручайте агенту в чате.
+
+| Требование или правило | Что проверяем изолированно | Вход | Ожидаемый результат | Подтверждение |
 |---|---|---|---|---|
 | Формирование промпта | ReviewService.review формирует строку промпта с включением diff | diff='X' | Вызов LLM с "Review this pull request and find problems:\nX" | TRAINING_PR.diff app/review_service.py:19-21 |
 | Формат ответа | ReviewService.review возвращает dict с ключом comment | mock LLM возвращает 'ok' | {'comment': 'ok'} | TRAINING_PR.diff app/review_service.py:21-22 |
