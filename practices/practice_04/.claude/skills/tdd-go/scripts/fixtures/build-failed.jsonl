@@ -1,0 +1,6 @@
+{"ImportPath":"example.com/fix [example.com/fix.test]","Action":"build-output","Output":"# example.com/fix [example.com/fix.test]\n"}
+{"ImportPath":"example.com/fix [example.com/fix.test]","Action":"build-output","Output":".\\calc_test.go:26:12: undefined: Div\n"}
+{"ImportPath":"example.com/fix [example.com/fix.test]","Action":"build-fail"}
+{"Time":"2026-10-06T18:27:56.5057336+03:00","Action":"start","Package":"example.com/fix"}
+{"Time":"2026-10-06T18:27:56.5057336+03:00","Action":"output","Package":"example.com/fix","Output":"FAIL\texample.com/fix [build failed]\n","OutputType":"frame"}
+{"Time":"2026-10-06T18:27:56.5057336+03:00","Action":"fail","Package":"example.com/fix","Elapsed":0,"FailedBuild":"example.com/fix [example.com/fix.test]"}

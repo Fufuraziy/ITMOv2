@@ -1,0 +1,183 @@
+/* Подборки ВкусВилла — дизайн-токены (skill frontend-design, план в docs/design.md). */
+:root {
+  --paper: #f3f5ee;     /* холодная бумага, фон */
+  --ink: #1b2a21;       /* тёмная хвоя вместо чёрного */
+  --ink-soft: #4e5c53;  /* вторичный текст */
+  --leaf: #2c7a45;      /* единственный яркий цвет — действие «в корзину» */
+  --leaf-deep: #22603a;
+  --shelf: #d9e0d2;     /* полки, линии, чипы */
+  --receipt: #ffffff;   /* чек и подложка фото */
+  --muted: #8f9c93;
+
+  --display: clamp(2.5rem, 6.4vw, 5.25rem);
+  font-family: 'Onest', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); }
+img { display: block; }
+
+:focus-visible { outline: 3px solid var(--leaf); outline-offset: 3px; border-radius: 4px; }
+
+.page { max-width: 1120px; margin: 0 auto; padding: 56px 24px 72px; }
+
+/* Поиск — герой страницы: вопрос и ответ одного кегля. */
+.search__title,
+.search__input {
+  font-size: var(--display);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+.search__title { margin: 0; }
+.search__title label { cursor: text; }
+.search__input {
+  display: block;
+  width: 100%;
+  margin: 6px 0 0;
+  padding: 0 0 10px;
+  font-family: inherit;
+  color: var(--leaf);
+  background: transparent;
+  border: 0;
+  border-bottom: 4px solid var(--ink);
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.search__input::placeholder { color: var(--shelf); }
+.search__input:focus-visible { outline: none; border-bottom-color: var(--leaf); }
+.search__input::-webkit-search-cancel-button { display: none; }
+
+.filters { display: grid; gap: 14px; margin-top: 22px; }
+.filters__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+.filters__group { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: transparent;
+  border: 1.5px solid var(--shelf);
+  border-radius: 999px;
+  padding: 5px 14px;
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--ink-soft); }
+.chip[aria-pressed='true'] { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+.chip__count { font-size: 0.8em; opacity: 0.55; font-variant-numeric: tabular-nums; }
+.chip--more { border-style: dashed; color: var(--ink-soft); }
+.chip--budget { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.sort { font-size: 0.95rem; color: var(--ink-soft); }
+.sort select {
+  font: inherit;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1.5px solid var(--ink-soft);
+  padding: 2px 0;
+  margin-left: 4px;
+  cursor: pointer;
+}
+
+/* Подборка — полка: товары стоят на планке, справа описание и покупка. */
+.results { margin-top: 40px; }
+.shelf {
+  display: grid;
+  grid-template-columns: minmax(280px, 5fr) 7fr;
+  gap: 24px 48px;
+  padding: 40px 0;
+  border-top: 1.5px solid var(--shelf);
+}
+.shelf__goods {
+  display: flex;
+  align-items: flex-end;
+  align-self: start;
+  padding: 0 0 0 4px;
+  border-bottom: 8px solid var(--shelf);
+  min-height: 132px;
+}
+.shelf__item {
+  width: 112px;
+  height: 112px;
+  object-fit: cover;
+  background: var(--receipt);
+  border: 3px solid var(--paper);
+  border-radius: 22px;
+  margin-left: -30px;
+}
+.shelf__item:first-child { margin-left: 0; }
+.shelf__item:nth-child(even) { transform: translateY(-10px); }
+
+.shelf__title { margin: 0 0 8px; font-size: clamp(1.6rem, 2.8vw, 2.25rem); font-weight: 800; letter-spacing: -0.025em; line-height: 1.08; }
+.shelf__text { margin: 0; color: var(--ink-soft); max-width: 60ch; }
+.shelf__tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+.shelf__tags li { font-size: 0.85rem; padding: 1px 10px; border-radius: 999px; background: var(--shelf); }
+
+.shelf__buy { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 22px; }
+.shelf__total { font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cart {
+  display: inline-block;
+  padding: 12px 20px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--leaf);
+  border-radius: 10px;
+  text-decoration: none;
+}
+.cart:hover { background: var(--leaf-deep); }
+
+.link-button {
+  font: inherit;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+/* Состав — чек с рваным краем; при открытии «печатается» сверху вниз. */
+.receipt {
+  margin-top: 18px;
+  padding: 18px 22px 26px;
+  background: var(--receipt);
+  --zig: 14px;
+  mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--zig) 100%;
+}
+.receipt[data-open='true'] { animation: print 320ms ease-out; }
+@keyframes print { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+.receipt__list { margin: 0; padding: 0; list-style: none; }
+.receipt__line { display: flex; align-items: baseline; gap: 8px; padding: 5px 0; }
+.receipt__line a { color: var(--ink); text-decoration: none; }
+.receipt__line a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.receipt__dots { flex: 1; min-width: 16px; border-bottom: 2px dotted var(--shelf); transform: translateY(-5px); }
+.receipt__price { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+
+.notice { padding: 32px 0; font-size: 1.15rem; border-top: 1.5px solid var(--shelf); }
+.notice p { margin: 0 0 12px; }
+
+.footer { margin-top: 24px; padding-top: 20px; border-top: 1.5px solid var(--shelf); color: var(--ink-soft); font-size: 0.9rem; }
+.footer p { margin: 0; max-width: 72ch; }
+
+@media (max-width: 760px) {
+  .page { padding: 32px 16px 56px; }
+  .shelf { grid-template-columns: 1fr; padding: 28px 0; }
+  .shelf__item { width: 84px; height: 84px; border-radius: 18px; margin-left: -24px; }
+  .shelf__goods { min-height: 100px; }
+  .receipt__line { flex-wrap: wrap; }
+  .receipt__dots { display: none; }
+  .receipt__price { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .receipt[data-open='true'] { animation: none; }
+}

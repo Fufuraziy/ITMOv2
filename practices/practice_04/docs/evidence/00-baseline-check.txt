@@ -1,0 +1,20 @@
+# Исходное состояние после предыдущего агента (до правок), 2026-10-06 18:26
+$ sh scripts/check.sh backend
+[backend]
+  FAIL gofmt (запустите: gofmt -w backend)
+       cmd\api\main.go
+       cmd\api\main_test.go
+       internal\collections\memory_store.go
+       internal\collections\service.go
+       internal\collections\service_test.go
+  FAIL go vet
+       cmd\api\main_test.go:22:12: conversion from int to string yields a string of one rune, not a string of digits
+  FAIL go test
+       # vv/collections/cmd/api
+       # [vv/collections/cmd/api]
+       cmd\api\main_test.go:22:12: conversion from int to string yields a string of one rune, not a string of digits
+       FAIL	vv/collections/cmd/api [build failed]
+       ok  	vv/collections/internal/collections	(cached)
+       FAIL
+CHECK FAIL (backend): gofmt go vet go test
+exit=1

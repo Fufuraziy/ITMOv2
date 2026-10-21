@@ -1,0 +1,35 @@
+# Демо MCP vv-collections, 2026-10-06T17:22:13.085Z
+tools/list: search_collections, get_collection, list_tags
+
+>>> list_tags {}
+<<< isError=false
+быстро (3), вечер (3), гости (3), обед (3), веган (2), завтрак (2), закуски (2), ЗОЖ (2), сладкое (2), суп (2), ужин (2), белок (1), вегетарианское (1), дети (1), классика (1), лето (1), осень (1), паста (1), перекус (1), пикник (1), постное (1)
+
+>>> search_collections {"query":"завтрак","max_price":1500,"sort":"price_asc"}
+<<< isError=false
+Найдено: 2 (цены на 2026-10-06)
+- smuzi-zavtrak — Смузи-завтрак без молока, 596 ₽, товаров: 4; теги: завтрак, ЗОЖ, веган, быстро; корзина: https://vkusvill.ru/?share_basket=3613731706
+- zavtrak-s-syrnikami — Завтрак с сырниками, 1 111 ₽, товаров: 4; теги: завтрак, сладкое, быстро; корзина: https://vkusvill.ru/?share_basket=3549115194
+
+>>> get_collection {"id":"zavtrak-s-syrnikami"}
+<<< isError=false
+Завтрак с сырниками — Сырники разогреть на сковороде, подать со сметаной и вареньем, к ним — кофе. Завтрак на двоих за 10 минут.
+- Сырники классические жареные: 1 шт × 306 ₽
+- Сметана 15%, 250 г: 1 шт × 98 ₽
+- Варенье клубничное, 310 г: 1 шт × 217 ₽
+- Кофе жареный молотый: 1 шт × 490 ₽
+Итого ≈ 1 111 ₽
+Перенести в корзину ВкусВилла: https://vkusvill.ru/?share_basket=3549115194
+
+>>> search_collections {"query":"пицца"}
+<<< isError=false
+Ничего не нашлось. Попробуй меньше слов, убери бюджет или выбери тег из list_tags.
+
+>>> get_collection {"id":"pizza-margarita"}
+<<< isError=true
+Подборки «pizza-margarita» нет. Найди нужный id через search_collections.
+
+>>> search_collections {"max_price":-100,"sort":"cheap"}
+<<< isError=true
+MCP error -32602: Input validation error: Invalid arguments for tool search_collections: Too small: expected number to be >0 at max_price
+Invalid option: expected one of "catalog"|"price_asc"|"price_desc" at sort
