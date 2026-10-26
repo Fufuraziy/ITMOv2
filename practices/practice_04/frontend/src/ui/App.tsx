@@ -1,8 +1,9 @@
 import React, { useEffect, useId, useState } from 'react'
 import {
-  type Collection, type Filters, type SearchResult, type Sort, type TagCount,
+  type Collection, type Filters, type Multiplier, type Product, type SearchResult, type Sort, type TagCount, type Variant,
   emptyFilters, fetchTags, fromSearchParams, searchCollections, toSearchParams,
 } from '../api'
+import { readVariants } from '../servings'
 
 const BUDGETS = [0, 500, 1000, 2000]
 const TAGS_VISIBLE = 10
@@ -40,6 +41,8 @@ export const App: React.FC = () => {
   const [result, setResult] = useState<SearchResult | null>(null)
   const [failed, setFailed] = useState(false)
   const [allTags, setAllTags] = useState(false)
+  // Выбранные порции по id подборки: живут до перезагрузки, в адрес и браузер не пишутся (FR-011).
+  const [servings, setServings] = useState<Record<string, Multiplier>>({})
   const q = useDebounced(filters.q, 250)
   // Теги отсортированы бэкендом по популярности; выбранный показываем всегда.
   const shownTags = allTags ? tags : tags.filter((t, i) => i < TAGS_VISIBLE || t.tag === filters.tag)
@@ -124,6 +127,7 @@ export const App: React.FC = () => {
       </header>
 
       <main className="results" aria-live="polite">
+        {!failed && !result && <p className="notice">Ищем подборки…</p>}
         {failed && <p role="alert" className="notice">Каталог не отвечает. Обновите страницу через минуту.</p>}
         {!failed && result && result.total === 0 && (
           <div className="notice">
@@ -140,7 +144,15 @@ export const App: React.FC = () => {
             </button>
           </div>
         )}
-        {!failed && result?.collections.map((c) => <Shelf key={c.id} c={c} />)}
+        {!failed && result?.collections.map((c) => (
+          <Shelf
+            key={c.id}
+            c={c}
+            multiplier={servings[c.id] ?? 1}
+            onSelect={(m) => setServings((s) => ({ ...s, [c.id]: m }))}
+            maxPrice={filters.maxPrice}
+          />
+        ))}
       </main>
 
       {result && (
@@ -156,11 +168,28 @@ export const App: React.FC = () => {
   )
 }
 
-const Shelf: React.FC<{ c: Collection }> = ({ c }) => {
+type ShelfProps = {
+  c: Collection
+  multiplier: Multiplier
+  onSelect: (m: Multiplier) => void
+  maxPrice: number
+}
+
+const Shelf: React.FC<ShelfProps> = ({ c, multiplier, onSelect, maxPrice }) => {
   const [open, setOpen] = useState(false)
   const titleId = useId()
   const receiptId = useId()
+  const servingsName = useId()
   const n = c.products.length
+  // Без вариантов (старый бэкенд) карточка как до фичи (FR-010).
+  const variants = readVariants(c)
+  // Выбранный множитель стал недоступен — показываем ×1 (FR-009).
+  const chosen = variants?.find((v) => v.multiplier === multiplier && v.available)
+  const active = variants ? chosen ?? variants[0] : null
+  const m: Multiplier = active ? active.multiplier : 1
+  const total = active ? active.total_price : c.total_price
+  const quantity = (p: Product) => (active ? active.quantities[String(p.xml_id)] : p.quantity)
+  const overBudget = maxPrice > 0 && total > maxPrice
 
   return (
     <article className="shelf" aria-labelledby={titleId}>
@@ -178,9 +207,13 @@ const Shelf: React.FC<{ c: Collection }> = ({ c }) => {
         </ul>
 
         <div className="shelf__buy">
-          <span className="shelf__total">≈ {rub(c.total_price)}</span>
-          <a className="cart" href={c.cart_url} target="_blank" rel="noopener noreferrer">
-            Перенести в корзину ВкусВилла
+          {variants && <Servings name={servingsName} variants={variants} value={m} onSelect={onSelect} />}
+          <span className="shelf__total" aria-live="polite" aria-atomic="true">
+            ≈ {rub(total)}{m > 1 ? ` · ×${m}` : ''}
+            {overBudget && <span className="shelf__over-budget">больше бюджета</span>}
+          </span>
+          <a className="cart" href={active ? active.cart_url : c.cart_url} target="_blank" rel="noopener noreferrer">
+            {m > 1 ? `Перенести в корзину ВкусВилла · ×${m}` : 'Перенести в корзину ВкусВилла'}
           </a>
           <button
             type="button"
@@ -199,7 +232,13 @@ const Shelf: React.FC<{ c: Collection }> = ({ c }) => {
               <li key={p.xml_id} className="receipt__line">
                 <a href={p.url} target="_blank" rel="noopener noreferrer">{p.name}</a>
                 <span className="receipt__dots" aria-hidden="true" />
-                <span className="receipt__price">{qty(p.quantity)} {p.unit} × {rub(p.price)}</span>
+                <span className="receipt__price">
+                  {qty(quantity(p))} {p.unit}
+                  {m > 1 && p.scalable === true && p.base_quantity !== undefined && (
+                    <span className="receipt__was"> · было {qty(p.base_quantity)} {p.unit}</span>
+                  )}
+                  {' '}× {rub(p.price)}
+                </span>
               </li>
             ))}
           </ul>
@@ -208,3 +247,39 @@ const Shelf: React.FC<{ c: Collection }> = ({ c }) => {
     </article>
   )
 }
+
+type ServingsProps = {
+  name: string
+  variants: Variant[]
+  value: Multiplier
+  onSelect: (m: Multiplier) => void
+}
+
+/** Порции ×1/×2/×4: нативные radio — стрелки и «выбрано» для программ чтения с экрана (research R-2). */
+const Servings: React.FC<ServingsProps> = ({ name, variants, value, onSelect }) => (
+  <fieldset className="servings">
+    <legend className="servings__legend">Порции</legend>
+    <div className="servings__track">
+      {variants.map((v) => (
+        <label key={v.multiplier} className="servings__option">
+          <input
+            type="radio"
+            className="servings__input"
+            name={name}
+            value={v.multiplier}
+            checked={v.multiplier === value}
+            disabled={!v.available}
+            aria-describedby={v.available ? undefined : `${name}-reason-${v.multiplier}`}
+            onChange={() => onSelect(v.multiplier)}
+          />
+          <span className="servings__face">×{v.multiplier}</span>
+        </label>
+      ))}
+    </div>
+    {variants.filter((v) => !v.available).map((v) => (
+      <span key={v.multiplier} id={`${name}-reason-${v.multiplier}`} className="servings__reason">
+        {v.reason ?? `×${v.multiplier} пока недоступно`}
+      </span>
+    ))}
+  </fieldset>
+)

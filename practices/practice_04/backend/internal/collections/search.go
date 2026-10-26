@@ -35,6 +35,7 @@ type Query struct {
 	Tag      string
 	MaxPrice int
 	Sort     Sort
+	Servings Servings // R7; 0 — как 1
 }
 
 // TagCount — тег и число подборок с ним (R5).
@@ -58,8 +59,8 @@ func haystack(c Collection) string {
 	return fold(strings.Join(parts, "\n"))
 }
 
-func matches(c Collection, words []string, tag string, maxPrice int) bool {
-	if maxPrice > 0 && c.TotalPrice > maxPrice {
+func matches(c Collection, words []string, tag string, maxPrice int, servings Servings) bool {
+	if maxPrice > 0 && priceFor(c, servings) > maxPrice {
 		return false
 	}
 	if tag != "" && !slices.ContainsFunc(c.Tags, func(t string) bool { return fold(t) == tag }) {
@@ -74,7 +75,8 @@ func matches(c Collection, words []string, tag string, maxPrice int) bool {
 	return true
 }
 
-// Search ищет подборки по R2. Ничего не нашлось — пустой срез, не nil.
+// Search ищет подборки по R2; бюджет и сортировка — по цене для q.Servings (R7).
+// Возвращает подборки каталога (без пересчёта). Ничего не нашлось — пустой срез, не nil.
 func (s *Service) Search(ctx context.Context, q Query) ([]Collection, error) {
 	list, err := s.store.List(ctx)
 	if err != nil {
@@ -84,15 +86,15 @@ func (s *Service) Search(ctx context.Context, q Query) ([]Collection, error) {
 	tag := fold(strings.TrimSpace(q.Tag))
 	out := []Collection{}
 	for _, c := range list {
-		if matches(c, words, tag, q.MaxPrice) {
+		if matches(c, words, tag, q.MaxPrice, q.Servings) {
 			out = append(out, c)
 		}
 	}
 	switch q.Sort {
 	case SortPriceAsc:
-		slices.SortStableFunc(out, func(a, b Collection) int { return cmp.Compare(a.TotalPrice, b.TotalPrice) })
+		slices.SortStableFunc(out, func(a, b Collection) int { return cmp.Compare(priceFor(a, q.Servings), priceFor(b, q.Servings)) })
 	case SortPriceDesc:
-		slices.SortStableFunc(out, func(a, b Collection) int { return cmp.Compare(b.TotalPrice, a.TotalPrice) })
+		slices.SortStableFunc(out, func(a, b Collection) int { return cmp.Compare(priceFor(b, q.Servings), priceFor(a, q.Servings)) })
 	}
 	return out, nil
 }
