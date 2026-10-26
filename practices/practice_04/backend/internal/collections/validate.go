@@ -3,6 +3,7 @@ package collections
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strings"
 	"unicode/utf8"
 )
@@ -15,7 +16,7 @@ const (
 	tagMin, tagMax                 = 2, 24
 	productsMin, productsMax       = 1, 20 // лимит корзины ВкусВилла
 	productNameMax                 = 120
-	cartURLPrefix                  = "https://vkusvill.ru/?share_basket="
+	cartURLPrefix                  = "https://vkusvill.ru/mobile?basket&share="
 	productURLPrefix               = "https://vkusvill.ru/goods/"
 )
 
@@ -23,7 +24,12 @@ const (
 const (
 	quantityMin float64 = 0.01
 	quantityMax float64 = 40
+	// scalableQuantityMax: ×4 не больше лимита корзины 40 (R7).
+	scalableQuantityMax float64 = 10
 )
+
+// cartServings — множители, для которых в cart_urls лежат готовые ссылки (R7); ×1 — cart_url.
+var cartServings = map[string]bool{"2": true, "4": true}
 
 var idPattern = regexp.MustCompile(`^[a-z0-9]+(-[a-z0-9]+)*$`)
 
@@ -70,6 +76,28 @@ func validate(c Collection) []string {
 	if !strings.HasPrefix(c.CartURL, cartURLPrefix) {
 		add("cart_url", "must start with %s", cartURLPrefix)
 	}
+	keys := []string{}
+	for k := range cartServings {
+		keys = append(keys, k)
+	}
+	for k := range c.CartURLs {
+		if !cartServings[k] {
+			keys = append(keys, k)
+		}
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		field := "cart_urls[" + k + "]"
+		url, ok := c.CartURLs[k]
+		switch {
+		case !ok:
+			add(field, "missing")
+		case !cartServings[k]:
+			add(field, "unknown servings, want 2 or 4")
+		case !strings.HasPrefix(url, cartURLPrefix):
+			add(field, "must start with %s", cartURLPrefix)
+		}
+	}
 	if n := len(c.Products); n < productsMin || n > productsMax {
 		add("products", "must contain %d-%d items, got %d", productsMin, productsMax, n)
 	}
@@ -88,8 +116,11 @@ func validate(c Collection) []string {
 		if n := runes(p.Name); n < 1 || n > productNameMax {
 			add(field+".name", "must be 1-%d characters, got %d", productNameMax, n)
 		}
-		if p.Quantity < quantityMin || p.Quantity > quantityMax {
+		switch {
+		case p.Quantity < quantityMin || p.Quantity > quantityMax:
 			add(field+".quantity", "must be %g-%g, got %g", quantityMin, quantityMax, p.Quantity)
+		case p.IsScalable() && p.Quantity > scalableQuantityMax:
+			add(field+".quantity", "scalable must be %g-%g, got %g", quantityMin, scalableQuantityMax, p.Quantity)
 		}
 		if p.Price <= 0 {
 			add(field+".price", "must be positive, got %g", p.Price)

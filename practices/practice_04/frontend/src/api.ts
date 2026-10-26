@@ -1,4 +1,18 @@
-// Клиент API поиска подборок (docs/requirements.md, R2, R5).
+// Клиент API поиска подборок (docs/requirements.md, R2, R5; порции — specs/002-servings-logic/contracts/http-api.md).
+
+export type Multiplier = 1 | 2 | 4
+
+/** Подборка, пересчитанная на один множитель порций. */
+export type Variant = {
+  multiplier: Multiplier
+  total_price: number
+  /** Количество по `xml_id` строкой. */
+  quantities: Record<string, number>
+  cart_url: string
+  available: boolean
+  /** Только при `available: false`. */
+  reason?: string
+}
 
 export type Product = {
   xml_id: number
@@ -9,6 +23,9 @@ export type Product = {
   rating: number
   url: string
   image: string
+  /** Новые поля бэкенда с порциями; на старом бэкенде их нет. */
+  scalable?: boolean
+  base_quantity?: number
 }
 
 export type Collection = {
@@ -19,6 +36,8 @@ export type Collection = {
   cart_url: string
   total_price: number
   products: Product[]
+  variants?: Variant[]
+  servings?: Multiplier
 }
 
 export type SearchResult = { updated_at: string; total: number; collections: Collection[] }
@@ -49,9 +68,26 @@ export function fromSearchParams(p: URLSearchParams): Filters {
   }
 }
 
+/** Ошибка API: HTTP-статус и машинный `code` из тела; текст `error` не разбираем. */
+export class ApiError extends Error {
+  constructor(readonly status: number, readonly code: string | undefined, path: string) {
+    super(`${path}: ${status}${code ? ` ${code}` : ''}`)
+    this.name = 'ApiError'
+  }
+}
+
+async function errorCode(res: Response): Promise<string | undefined> {
+  try {
+    const body = await res.json()
+    return typeof body?.code === 'string' ? body.code : undefined
+  } catch {
+    return undefined
+  }
+}
+
 async function getJSON<T>(path: string, signal?: AbortSignal): Promise<T> {
   const res = await fetch(path, { signal })
-  if (!res.ok) throw new Error(`${path}: ${res.status}`)
+  if (!res.ok) throw new ApiError(res.status, await errorCode(res), path)
   return res.json() as Promise<T>
 }
 

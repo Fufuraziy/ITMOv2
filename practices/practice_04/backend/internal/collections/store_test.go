@@ -9,6 +9,24 @@ import (
 	"vv/collections/internal/collections"
 )
 
+// TestNewMemoryStore_ScalableLimitMessage проверяет полный текст проблемы R1 для
+// масштабируемого товара с базой больше 10 (R3: ×4 не больше лимита корзины 40).
+func TestNewMemoryStore_ScalableLimitMessage(t *testing.T) {
+	c := breakfast()
+	c.Products[0].Quantity = 15 // масштабируемый по умолчанию
+
+	_, err := collections.NewMemoryStore([]collections.Collection{c, soup()})
+
+	var verr *collections.ValidationError
+	if !errors.As(err, &verr) {
+		t.Fatalf("NewMemoryStore error = %v, want *ValidationError", err)
+	}
+	want := []string{"zavtrak-s-syrnikami: products[0].quantity: scalable must be 0.01-10, got 15"}
+	if len(verr.Problems) != len(want) || verr.Problems[0] != want[0] {
+		t.Errorf("problems = %q, want %q", verr.Problems, want)
+	}
+}
+
 // TestNewMemoryStore_Rules проверяет правила каталога R3 (docs/requirements.md).
 func TestNewMemoryStore_Rules(t *testing.T) {
 	tests := []struct {
@@ -32,6 +50,8 @@ func TestNewMemoryStore_Rules(t *testing.T) {
 		{"тег из 1 символа", func(c *collections.Collection) { c.Tags[1] = "я" }, []string{"zavtrak-s-syrnikami: tags[1]"}},
 		{"повтор тега", func(c *collections.Collection) { c.Tags[2] = "Завтрак" }, []string{"zavtrak-s-syrnikami: tags[2]"}},
 		{"чужая ссылка на корзину", func(c *collections.Collection) { c.CartURL = "https://example.com/?share_basket=1" }, []string{"zavtrak-s-syrnikami: cart_url"}},
+		{"ссылка на корзину нового формата ВкусВилла", func(c *collections.Collection) { c.CartURL = "https://vkusvill.ru/mobile?basket&share=64435" }, nil},
+		{"ссылка на корзину старого формата share_basket", func(c *collections.Collection) { c.CartURL = "https://vkusvill.ru/?share_basket=1" }, []string{"zavtrak-s-syrnikami: cart_url"}},
 		{"нет товаров", func(c *collections.Collection) { c.Products = nil }, []string{"zavtrak-s-syrnikami: products"}},
 		{"xml_id не положительный", func(c *collections.Collection) { c.Products[0].XMLID = 0 }, []string{"zavtrak-s-syrnikami: products[0].xml_id"}},
 		{"повтор xml_id", func(c *collections.Collection) { c.Products[1].XMLID = c.Products[0].XMLID }, []string{"zavtrak-s-syrnikami: products[1].xml_id"}},
@@ -39,6 +59,28 @@ func TestNewMemoryStore_Rules(t *testing.T) {
 		{"количество 0", func(c *collections.Collection) { c.Products[0].Quantity = 0 }, []string{"zavtrak-s-syrnikami: products[0].quantity"}},
 		{"количество 41", func(c *collections.Collection) { c.Products[0].Quantity = 41 }, []string{"zavtrak-s-syrnikami: products[0].quantity"}},
 		{"цена 0", func(c *collections.Collection) { c.Products[1].Price = 0 }, []string{"zavtrak-s-syrnikami: products[1].price"}},
+
+		// R7: порции.
+		{"масштабируемый 10", func(c *collections.Collection) { c.Products[0].Quantity = 10 }, nil},
+		{"масштабируемый 10.01", func(c *collections.Collection) { c.Products[0].Quantity = 10.01 }, []string{"zavtrak-s-syrnikami: products[0].quantity"}},
+		{"немасштабируемый 15", func(c *collections.Collection) {
+			c.Products[0].Quantity = 15
+			c.Products[0].Scalable = ptr(false)
+		}, nil},
+		{"немасштабируемый 41", func(c *collections.Collection) {
+			c.Products[0].Quantity = 41
+			c.Products[0].Scalable = ptr(false)
+		}, []string{"zavtrak-s-syrnikami: products[0].quantity"}},
+		{"cart_urls с ключом 3", func(c *collections.Collection) {
+			c.CartURLs = map[string]string{"2": cartURL(2), "3": cartURL(3), "4": cartURL(4)}
+		}, []string{"zavtrak-s-syrnikami: cart_urls[3]"}},
+		{"нет cart_urls[2]", func(c *collections.Collection) { delete(c.CartURLs, "2") }, []string{"zavtrak-s-syrnikami: cart_urls[2]"}},
+		{"нет cart_urls", func(c *collections.Collection) { c.CartURLs = nil }, []string{
+			"zavtrak-s-syrnikami: cart_urls[2]", "zavtrak-s-syrnikami: cart_urls[4]",
+		}},
+		{"cart_urls[4] с чужим префиксом", func(c *collections.Collection) {
+			c.CartURLs = map[string]string{"2": cartURL(2), "4": "https://example.com/?share_basket=4"}
+		}, []string{"zavtrak-s-syrnikami: cart_urls[4]"}},
 		{"ссылка не на товар ВкусВилла", func(c *collections.Collection) { c.Products[0].URL = "https://vkusvill.ru/" }, []string{"zavtrak-s-syrnikami: products[0].url"}},
 		{"несколько нарушений сразу", func(c *collections.Collection) {
 			c.Title = ""

@@ -11,6 +11,12 @@
 | [06-catalog-build.txt](06-catalog-build.txt) | сборка каталога через MCP ВкусВилла: по каждой теме — запрос → выбранный товар, цена за шт/кг, количество, ссылка на корзину |
 | [07-page.png](07-page.png) | страница поиска (1280 px): поиск-герой, 10 тегов, бюджет, полки с фото и кнопкой корзины |
 | [05-agent-demo.md](05-agent-demo.md) | **агентный прогон с нуля** (до разворота сервиса в поиск): новая сессия Claude Code сама загрузила AGENTS.md и skill, вызвала `Skill(tdd-go)`, сделала фичу B (R4) через `RED OK → GREEN OK`, получила 11 ответов hook (8 FAIL), вызвала MCP ВкусВилла и `create_collection` (успех и ошибка) |
+| [servings-carts.md](servings-carts.md) | ДЗ 5, команда 2: 9 корзин ВкусВилла (3 подборки × ×1/×2/×4) совпали с `products` ответа API |
+| [08-servings-check-all.txt](08-servings-check-all.txt) | ДЗ 5: `sh scripts/check.sh` после реализации порций — PASS по всем областям |
+| [09-servings-e2e.txt](09-servings-e2e.txt) | ДЗ 5: сквозная проверка на живом сервисе — ×2 в API и UI, инварианты на 36 ответах, ошибки `servings` 3/0/-1/abc, граница ×4 ≤ 40, 360 px |
+| [10-servings-ui-x2.jpg](10-servings-ui-x2.jpg), [11-servings-ui-360-x4.jpg](11-servings-ui-360-x4.jpg) | ДЗ 5: карточка в ×2 (800 px) и борщ в ×4 (360 px) |
+
+Отчёт по ДЗ 5 — [../../REPORT_HW5.md](../../REPORT_HW5.md).
 
 Как воспроизвести:
 

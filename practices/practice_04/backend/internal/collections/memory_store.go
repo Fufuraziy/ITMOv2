@@ -2,6 +2,7 @@ package collections
 
 import (
 	"context"
+	"maps"
 	"math"
 	"slices"
 )
@@ -63,5 +64,6 @@ func (m *MemoryStore) Get(_ context.Context, id string) (Collection, error) {
 func clone(c Collection) Collection {
 	c.Tags = slices.Clone(c.Tags)
 	c.Products = slices.Clone(c.Products)
+	c.CartURLs = maps.Clone(c.CartURLs)
 	return c
 }
