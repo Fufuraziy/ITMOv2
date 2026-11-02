@@ -98,7 +98,13 @@ class SandboxTest(unittest.TestCase):
             sentinel = Path(directory) / "sentinel.txt"
             sentinel.write_text("keep")
             link = self.sandbox.root / "escape"
-            link.symlink_to(directory, target_is_directory=True)
+            try:
+                link.symlink_to(directory, target_is_directory=True)
+            except OSError as exc:
+                # Creating a symlink needs a privilege the OS may withhold
+                # (e.g. Windows without Developer Mode, WinError 1314). The
+                # escape scenario cannot arise without a symlink, so skip.
+                self.skipTest(f"cannot create symlink on this platform: {exc}")
             with self.assertRaises(ValueError):
                 self.sandbox.read("escape/sentinel.txt")
             with self.assertRaises(ValueError):

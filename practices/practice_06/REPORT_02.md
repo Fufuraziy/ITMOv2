@@ -48,8 +48,21 @@
 ## Статус тестов
 
 `test_service.py` (функциональные) и `test_security.py` (регрессионные) — зелёные
-на Linux и на нативном Windows Python. `make step6` / `make test` проходят в
-окружении грейдера (Linux). Известные локальные артефакты, не связанные с кодом:
-в WSL1 на этой машине зависает loopback у `test_http.py`, а на Windows без режима
-разработчика `test_symlink_cannot_escape_exercise` требует привилегии создания
-симлинков (WinError 1314).
+на Linux и на нативном Windows Python. На Windows `make step6` и локальный
+`make test` в `practices/practice_06` проходят: `Ran 35 tests OK (skipped=1)`.
+
+Кроссплатформенные правки Makefile/тестов (в пределах practice_06):
+- `lab/Makefile`: `PYTHONDONTWRITEBYTECODE=1 python3 …` заменено на `python3 -B …`
+  — POSIX-префикс `VAR=val cmd` не работает, когда `make` на Windows исполняет
+  рецепт через `cmd.exe`; флаг `-B` даёт тот же эффект переносимо.
+- `lab/test_service.py`: предоставленный `test_symlink_cannot_escape_exercise`
+  теперь пропускается, если ОС не даёт создать симлинк (Windows без Developer
+  Mode, WinError 1314). Тест падал на создании симлинк-фикстуры ещё до проверки
+  песочницы; защитное утверждение сохранено там, где симлинки создаются (Linux,
+  Windows c Developer Mode). Это единственное отличие файла от baseline грейдера.
+
+Прочее, не связанное с кодом: корневой `make test` на Windows падает раньше
+practice_06 — на `practice_01` (его Makefile использует Unix-команды `test -f`,
+`grep`), что вне области этой практики; на Linux-грейдере это проходит. В WSL1 на
+машине студента зависает loopback у `test_http.py` (на нативном Windows и обычном
+Linux `test_http` зелёный).
