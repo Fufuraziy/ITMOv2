@@ -1,0 +1,61 @@
+# Сквозная проверка API порций (R7) на живом сервисе
+# bash scripts/dev.sh → бэкенд http://127.0.0.1:8080, страница http://127.0.0.1:5173 · 2026-10-21T17:06:42Z
+
+## 1. ×2: GET /collections/zavtrak-s-syrnikami?servings=2
+{"id":"zavtrak-s-syrnikami","title":"Завтрак с сырниками","description":"Сырники разогреть на сковороде, подать со сметаной и вареньем, к ним — кофе. Завтрак на двоих за 10 минут.","tags":["завтрак","сладкое","быстро"],"servings":2,"cart_url":"https://vkusvill.ru/mobile?basket\u0026share=64487","total_price":1531,"products":[{"xml_id":114976,"name":"Сырники классические жареные","quantity":2,"base_quantity":1,"scalable":true,"unit":"шт","price":306,"rating":4.9,"url":"https://vkusvill.ru/goods/syrniki-klassicheskie-zharenye-114976/","image":"https://img.vkusvill.ru/pim/images/site/site_BigWebP/e32cccd6-29bd-4fff-9ad6-233de029614b.webp"},{"xml_id":14526,"name":"Сметана 15%, 250 г","quantity":2,"base_quantity":1,"scalable":true,"unit":"шт","price":98,"rating":4.9,"url":"https://vkusvill.ru/goods/smetana-15-14526/","image":"https://img.vkusvill.ru/pim/images/site/site_BigWebP/9241e6a4-40f5-4904-8b77-feeae65def49.webp"},{"xml_id":19927,"name":"Варенье клубничное, 310 г","quantity":1,"base_quantity":1,"scalable":false,"unit":"шт","price":223,"rating":4.8,"url":"https://vkusvill.ru/goods/varene-klubnichnoe-19927/","image":"https://img.vkusvill.ru/pim/images/site/site_BigWebP/9525edd7-87fb-49ca-872d-c0dbaa422d4d.webp"},{"xml_id":1295,"name":"Кофе \"Венский\" молотый","quantity":1,"base_quantity":1,"scalable":false,"unit":"шт","price":500,"rating":4.8,"url":"https://vkusvill.ru/goods/kofe-venskiy-molotyy-1295/","image":"https://img.vkusvill.ru/pim/images/site/site_BigWebP/726296a9-71fd-4e72-94f6-d9d0b0b8b081.webp?1789045453"}],"variants":[{"multiplier":1,"total_price":1127,"quantities":{"114976":1,"1295":1,"14526":1,"19927":1},"cart_url":"https://vkusvill.ru/mobile?basket\u0026share=64486","available":true},{"multiplier":2,"total_price":1531,"quantities":{"114976":2,"1295":1,"14526":2,"19927":1},"cart_url":"https://vkusvill.ru/mobile?basket\u0026share=64487","available":true},{"multiplier":4,"total_price":2339,"quantities":{"114976":4,"1295":1,"14526":4,"19927":1},"cart_url":"https://vkusvill.ru/mobile?basket\u0026share=64488","available":true}]}
+
+[HTTP 200 application/json]
+
+## 2. Инварианты контракта на всём каталоге: 12 подборок × servings 1, 2, 4
+проверок: status200, servings, total_eq_variant, cart_eq_variant, total_rounded_once, three_variants, available, quantities, no_float_tails, cart_prefix
+ответов: 36; нарушений: 0; максимальное quantity: 20
+пример кг, борщ ×4: Свекла 0.5 → 2; Капуста белокочанная 0.5 → 2; Картофель Астрахань 1 → 4; Морковь 0.3 → 1.2
+
+## 3. Ошибки и границы servings
+GET /collections?servings=3              → {"error":"invalid query: servings must be one of 1, 2, 4, got \"3\"","code":"invalid_query"}
+  [HTTP 400]
+GET /collections/borshch?servings=0      → {"error":"invalid query: servings must be one of 1, 2, 4, got \"0\"","code":"invalid_query"}
+  [HTTP 400]
+GET /collections/borshch?servings=-1     → {"error":"invalid query: servings must be one of 1, 2, 4, got \"-1\"","code":"invalid_query"}
+  [HTTP 400]
+GET /collections/borshch?servings=abc    → {"error":"invalid query: servings must be one of 1, 2, 4, got \"abc\"","code":"invalid_query"}
+  [HTTP 400]
+GET /collections/borshch?servings=2.0    → {"error":"invalid query: servings must be one of 1, 2, 4, got \"2.0\"","code":"invalid_query"}
+  [HTTP 400]
+GET /collections/borshch?servings=02     → {"error":"invalid query: servings must be one of 1, 2, 4, got \"02\"","code":"invalid_query"}
+  [HTTP 400]
+GET /collections/borshch?servings=%2B2   → {"error":"invalid query: servings must be one of 1, 2, 4, got \"+2\"","code":"invalid_query"}
+  [HTTP 400]
+GET /collections/net-takoi?servings=abc  → {"error":"invalid query: servings must be one of 1, 2, 4, got \"abc\"","code":"invalid_query"}
+  [HTTP 400]
+GET /collections/net-takoi?servings=2    → {"error":"collection not found","code":"collection_not_found"}
+  [HTTP 404]
+GET /collections/borshch?servings=       → servings=1  [HTTP 200]
+GET /collections/borshch?servings=2&servings=3 → servings=2  [HTTP 200]
+POST /collections?servings=3             → Method Not Allowed
+  [HTTP 405 text/plain; charset=utf-8]
+
+## 4. Граница «×4 не больше 40» — каталог встроен, база 10/15 проверяется тестами
+--- PASS: TestAPI_ServingsQuantityLimit (0.00s)
+ok  	vv/collections/internal/httpapi	2.294s
+--- PASS: TestNewMemoryStore_ScalableLimitMessage (0.00s)
+--- PASS: TestNewMemoryStore_Rules (0.00s)
+    --- PASS: TestNewMemoryStore_Rules/количество_41 (0.00s)
+    --- PASS: TestNewMemoryStore_Rules/масштабируемый_10 (0.00s)
+    --- PASS: TestNewMemoryStore_Rules/масштабируемый_10.01 (0.00s)
+    --- PASS: TestNewMemoryStore_Rules/немасштабируемый_15 (0.00s)
+    --- PASS: TestNewMemoryStore_Rules/немасштабируемый_41 (0.00s)
+ok  	vv/collections/internal/collections	0.796s
+
+## 5. UI на живом сервисе (встроенный браузер, http://127.0.0.1:5173)
+Карточка «Завтрак с сырниками» → клик по сегменту ×2 (DOM после клика):
+  итог (aria-live):   ≈ 1 531 ₽ · ×2                       # = total_price варианта ×2 из раздела 1
+  кнопка корзины:     Перенести в корзину ВкусВилла · ×2 → https://vkusvill.ru/mobile?basket&share=64487   # = cart_url варианта ×2
+  состав:             Сырники 2 шт · было 1 шт × 306 ₽ | Сметана 2 шт · было 1 шт × 98 ₽ | Варенье 1 шт × 223 ₽ | Кофе 1 шт × 500 ₽
+                      («было» только у scalable: true; варенье и кофе — scalable: false)
+  запросы к API:      после клика новых запросов нет; /collections запрошен один раз при загрузке, без servings (FR-003, FR-018)
+  соседние карточки:  остаются ×1; адрес страницы не меняется (FR-002, FR-011)
+  доступность:        <fieldset><legend>Порции</legend> + radio; итог в aria-live="polite" (FR-014)
+Ширина 360 px, во всех 12 карточках выбран ×1, затем ×2, затем ×4, состав раскрыт:
+  document.scrollWidth = 360 при ×1, ×2, ×4; элементов за правым краем — 0 (FR-017, SC-006)
+Снимки: 10-servings-ui-x2.jpg (×2, 800 px), 11-servings-ui-360-x4.jpg (борщ ×4, 360 px)

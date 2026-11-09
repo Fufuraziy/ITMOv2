@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-06",
+  "updated_at": "2026-10-21",
   "collections": [
     {
       "id": "zavtrak-s-syrnikami",
@@ -10,7 +10,11 @@
         "сладкое",
         "быстро"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=3549115194",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64486",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64487",
+        "4": "https://vkusvill.ru/mobile?basket&share=64488"
+      },
       "products": [
         {
           "xml_id": 114976,
@@ -37,20 +41,22 @@
           "name": "Варенье клубничное, 310 г",
           "quantity": 1,
           "unit": "шт",
-          "price": 217,
+          "price": 223,
           "url": "https://vkusvill.ru/goods/varene-klubnichnoe-19927/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/9525edd7-87fb-49ca-872d-c0dbaa422d4d.webp",
-          "rating": 4.8
+          "rating": 4.8,
+          "scalable": false
         },
         {
-          "xml_id": 16124,
-          "name": "Кофе жареный молотый",
+          "xml_id": 1295,
+          "name": "Кофе \"Венский\" молотый",
           "quantity": 1,
           "unit": "шт",
-          "price": 490,
-          "url": "https://vkusvill.ru/goods/kofe-zharenyy-molotyy-16124/",
-          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/be34fa47-7cfd-4a1e-aba0-61fc7879b449.webp",
-          "rating": 4.8
+          "price": 500,
+          "url": "https://vkusvill.ru/goods/kofe-venskiy-molotyy-1295/",
+          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/726296a9-71fd-4e72-94f6-d9d0b0b8b081.webp?1789045453",
+          "rating": 4.8,
+          "scalable": false
         }
       ]
     },
@@ -64,17 +70,21 @@
         "вегетарианское",
         "осень"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=156958154",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64489",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64490",
+        "4": "https://vkusvill.ru/mobile?basket&share=64491"
+      },
       "products": [
         {
           "xml_id": 17081,
           "name": "Тыква очищенная в в/у",
           "quantity": 2,
           "unit": "шт",
-          "price": 136,
+          "price": 170,
           "url": "https://vkusvill.ru/goods/tykva-ochishchennaya-v-v-u-17081/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/f4b3f4fc-118a-4cde-a8e2-82ee3a544527.webp?1725224126.8349",
-          "rating": 4.9
+          "rating": 4.6
         },
         {
           "xml_id": 74057,
@@ -101,17 +111,17 @@
           "name": "Чеснок,100 г",
           "quantity": 1,
           "unit": "шт",
-          "price": 115,
+          "price": 120,
           "url": "https://vkusvill.ru/goods/chesnok-35065/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/92ac7c41-ab6d-4ff9-801e-6ca8f9d97611.webp",
-          "rating": 4.8
+          "rating": 4.9
         },
         {
           "xml_id": 27392,
           "name": "Семечки штирийской голосемянной тыквы",
           "quantity": 1,
           "unit": "шт",
-          "price": 188,
+          "price": 197,
           "url": "https://vkusvill.ru/goods/semechki-shtiriyskoy-golosemyannoy-tykvy-27392/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/4b1c883c-1bbe-48a5-8587-01af8cc67943.webp?1710277604.7759",
           "rating": 4.9
@@ -127,17 +137,21 @@
         "паста",
         "быстро"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=679119562",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64492",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64493",
+        "4": "https://vkusvill.ru/mobile?basket&share=64494"
+      },
       "products": [
         {
           "xml_id": 781,
           "name": "Макароны \"Спагетти\"",
           "quantity": 1,
           "unit": "шт",
-          "price": 89,
+          "price": 90,
           "url": "https://vkusvill.ru/goods/makarony-spagetti-781/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/1a161e34-5ed8-43db-87d9-8550bf859eb3.webp",
-          "rating": 4.9
+          "rating": 5
         },
         {
           "xml_id": 31952,
@@ -150,13 +164,13 @@
           "rating": 4.9
         },
         {
-          "xml_id": 22658,
-          "name": "Яйцо куриное С0",
+          "xml_id": 15544,
+          "name": "Яйцо куриное С1",
           "quantity": 1,
           "unit": "шт",
-          "price": 141,
-          "url": "https://vkusvill.ru/goods/yaytso-kurinoe-s0-22658/",
-          "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/4730b2ae-6252-4ac9-ad1f-3028081fcfd3.webp?1713045853.9708",
+          "price": 119,
+          "url": "https://vkusvill.ru/goods/yaytso-kurinoe-s1-15544/",
+          "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/95b2f429-fc0d-4e8d-94b1-0a0fdccf19f1.webp?1717544790.1609",
           "rating": 4.9
         },
         {
@@ -167,17 +181,18 @@
           "price": 236,
           "url": "https://vkusvill.ru/goods/syr-parmezan-45-6-mes-tyertyy-115018/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/59f0f2d0-cb72-498a-80e0-793460029c8f.webp",
-          "rating": 4.9
+          "rating": 5
         },
         {
           "xml_id": 16844,
           "name": "Перец черный молотый, 10 г",
           "quantity": 1,
           "unit": "шт",
-          "price": 44,
+          "price": 45,
           "url": "https://vkusvill.ru/goods/perets-chernyy-molotyy-16844/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/8a813b61-1af1-4411-aa4a-98c6c2d0aba9.webp",
-          "rating": 5
+          "rating": 5,
+          "scalable": false
         }
       ]
     },
@@ -190,7 +205,11 @@
         "суп",
         "классика"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=2622124228",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64498",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64499",
+        "4": "https://vkusvill.ru/mobile?basket&share=64500"
+      },
       "products": [
         {
           "xml_id": 68168,
@@ -207,7 +226,7 @@
           "name": "Свекла",
           "quantity": 0.5,
           "unit": "кг",
-          "price": 45,
+          "price": 43,
           "url": "https://vkusvill.ru/goods/svekla-611/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/0fcd9d09-59f4-4355-80e7-c4b930210e4a.webp?1717796282.0927",
           "rating": 4.9
@@ -227,7 +246,7 @@
           "name": "Картофель Астрахань",
           "quantity": 1,
           "unit": "кг",
-          "price": 90,
+          "price": 95,
           "url": "https://vkusvill.ru/goods/kartofel-astrakhan-97355/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/65845ca9-f5f2-49e9-8e85-e6ab49c9c301.webp?1790612385",
           "rating": 4.8
@@ -237,20 +256,21 @@
           "name": "Морковь",
           "quantity": 0.3,
           "unit": "кг",
-          "price": 50,
+          "price": 53,
           "url": "https://vkusvill.ru/goods/morkov-606/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/a48e118c-f495-4893-883b-884c3ff0718d.webp?1717795831.944",
           "rating": 4.8
         },
         {
-          "xml_id": 56687,
-          "name": "Томатная паста, 140 гр",
+          "xml_id": 65007,
+          "name": "Паста томатная, 250 г",
           "quantity": 1,
           "unit": "шт",
-          "price": 66,
-          "url": "https://vkusvill.ru/goods/tomatnaya-pasta-56687/",
-          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/695f906f-d4f6-4407-b45d-821e6602f7d8.webp",
-          "rating": 4.9
+          "price": 127,
+          "url": "https://vkusvill.ru/goods/pasta-tomatnaya-65007/",
+          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/2af4f97e-1a64-4f12-b2ce-b2341b899954.webp?1783988944",
+          "rating": 4.9,
+          "scalable": false
         },
         {
           "xml_id": 143,
@@ -259,7 +279,7 @@
           "unit": "шт",
           "price": 158,
           "url": "https://vkusvill.ru/goods/smetana-20-143/",
-          "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/315603e6-2376-4833-a49c-662f994c98fb.webp?1741645524.7475",
+          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/ba92a9f5-2080-4cfe-852d-e34bba521806.webp?1792543555",
           "rating": 4.9
         }
       ]
@@ -273,7 +293,11 @@
         "гости",
         "вечер"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=857660926",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64501",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64502",
+        "4": "https://vkusvill.ru/mobile?basket&share=64503"
+      },
       "products": [
         {
           "xml_id": 106665,
@@ -292,18 +316,18 @@
           "unit": "шт",
           "price": 283,
           "url": "https://vkusvill.ru/goods/syr-gauda-88574/",
-          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/1a8ca4c9-fdde-4b28-bba6-e77ed8717c10.webp",
+          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/177efe6a-71cf-4b9d-870d-146748985dd3.webp?1792193521",
           "rating": 4.8
         },
         {
-          "xml_id": 15923,
-          "name": "Виноград Кишмиш розовый без косточки",
+          "xml_id": 22939,
+          "name": "Виноград Кишмиш черный без косточки",
           "quantity": 0.5,
           "unit": "кг",
-          "price": 310,
-          "url": "https://vkusvill.ru/goods/vinograd-kishmish-rozovyy-bez-kostochki-15923/",
-          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/90a0aa8b-6eac-4b63-b2ea-8cb3759bd9fd.webp",
-          "rating": 4.9
+          "price": 228,
+          "url": "https://vkusvill.ru/goods/vinograd-kishmish-chernyy-bez-kostochki-22939/",
+          "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/cfe4b035-a3de-4a5b-b47d-796efcbe283f.webp?1730870014.1779",
+          "rating": 4.8
         },
         {
           "xml_id": 94292,
@@ -323,7 +347,8 @@
           "price": 365,
           "url": "https://vkusvill.ru/goods/med-naturalnyy-tsvetochnyy-47316/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/4aa9428b-e0fc-4254-9599-0adb7efdcae3.webp",
-          "rating": 4.9
+          "rating": 4.8,
+          "scalable": false
         },
         {
           "xml_id": 26959,
@@ -333,7 +358,7 @@
           "price": 47,
           "url": "https://vkusvill.ru/goods/khlebtsy-grechnevye-zapechennye-26959/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/7361135b-8735-40c5-bf59-b3a6a70397bd.webp?1732406087.8228",
-          "rating": 4.9
+          "rating": 5
         }
       ]
     },
@@ -346,7 +371,11 @@
         "лето",
         "гости"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=425369591",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64510",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64511",
+        "4": "https://vkusvill.ru/mobile?basket&share=64512"
+      },
       "products": [
         {
           "xml_id": 21482,
@@ -359,54 +388,54 @@
           "rating": 4.9
         },
         {
-          "xml_id": 20811,
-          "name": "Хумус с кедровыми орешками",
+          "xml_id": 42845,
+          "name": "Хумус классический",
           "quantity": 1,
           "unit": "шт",
-          "price": 250,
-          "url": "https://vkusvill.ru/goods/khumus-s-kedrovymi-oreshkami-20811/",
-          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/2a6b9476-3f8f-42ee-99f7-de84c220d017.webp",
+          "price": 220,
+          "url": "https://vkusvill.ru/goods/khumus-klassicheskiy-42845/",
+          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/417913a6-4351-4a80-bbe5-74cfae2ab256.webp",
           "rating": 4.9
         },
         {
-          "xml_id": 609,
-          "name": "Огурцы короткоплодные",
+          "xml_id": 28740,
+          "name": "Огурцы \"Корнишоны\", 300 г",
           "quantity": 0.5,
-          "unit": "кг",
-          "price": 215,
-          "url": "https://vkusvill.ru/goods/ogurtsy-korotkoplodnye-609/",
-          "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/c98fdf8e-b9ae-4283-82d3-b329622a11cd.webp?1717796091.754",
-          "rating": 4.8
+          "unit": "шт",
+          "price": 225,
+          "url": "https://vkusvill.ru/goods/ogurtsy-kornishony-28740/",
+          "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/fb08c4d7-6717-4822-b6de-e29711ce6975.webp?1715629040.4689",
+          "rating": 4.9
         },
         {
-          "xml_id": 21629,
-          "name": "Томаты черри красные, 250 г",
+          "xml_id": 24372,
+          "name": "Томаты черри красные на ветке, 250 г",
           "quantity": 1,
           "unit": "шт",
-          "price": 188,
-          "url": "https://vkusvill.ru/goods/tomaty-cherri-krasnye-21629/",
-          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/69135a57-07fd-40b6-aa95-8343cb16a5cd.webp?1785891176",
-          "rating": 4.7
+          "price": 275,
+          "url": "https://vkusvill.ru/goods/tomaty-cherri-krasnye-na-vetke-24372/",
+          "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/6aa1db2f-ec0a-4644-bcbe-a311cb2dacef.webp?1712260577.7813",
+          "rating": 4.8
         },
         {
           "xml_id": 85153,
           "name": "Крылья цыплят-бройлеров две части раздельно",
           "quantity": 1,
           "unit": "кг",
-          "price": 561,
+          "price": 571,
           "url": "https://vkusvill.ru/goods/krylya-tsyplyat-broylerov-dve-chasti-razdelno-85153/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/d9b12bb5-e114-48ee-bb8a-c8b4857559b8.webp?1781875080",
-          "rating": 4.8
+          "rating": 4.9
         },
         {
           "xml_id": 76546,
           "name": "Лимонад \"Домашний\" с соком манго-маракуйи, 330 мл",
           "quantity": 1,
           "unit": "шт",
-          "price": 150,
+          "price": 152,
           "url": "https://vkusvill.ru/goods/limonad-domashniy-s-sokom-mango-marakuyi-76546/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/d766543e-adc1-4c0d-b671-21a55a79d44a.webp",
-          "rating": 5
+          "rating": 4.9
         }
       ]
     },
@@ -419,7 +448,11 @@
         "ЗОЖ",
         "белок"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=539249643",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64513",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64514",
+        "4": "https://vkusvill.ru/mobile?basket&share=64515"
+      },
       "products": [
         {
           "xml_id": 488,
@@ -436,7 +469,7 @@
           "name": "Крупа гречневая ядрица, 900 г",
           "quantity": 1,
           "unit": "шт",
-          "price": 85,
+          "price": 90,
           "url": "https://vkusvill.ru/goods/krupa-grechnevaya-yadritsa-17699/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/3c1c0559-befb-49b7-87a5-80edf083c7d8.webp?1731893395.2713",
           "rating": 4.9
@@ -446,7 +479,7 @@
           "name": "Брокколи",
           "quantity": 0.4,
           "unit": "кг",
-          "price": 385,
+          "price": 395,
           "url": "https://vkusvill.ru/goods/brokkoli-1169/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/1511de8c-5192-4a72-aaed-f5a764ceb857.webp?1742422227.1488",
           "rating": 4.9
@@ -456,7 +489,7 @@
           "name": "Творог 5%, 400 г",
           "quantity": 1,
           "unit": "шт",
-          "price": 198,
+          "price": 203,
           "url": "https://vkusvill.ru/goods/tvorog-5-185/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/d72f5eb8-dc1e-445b-a4a6-a6021868caa5.webp",
           "rating": 4.8
@@ -469,7 +502,7 @@
           "price": 140,
           "url": "https://vkusvill.ru/goods/yogurt-grecheskiy-4-76000/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/ccedc62d-565a-450c-8f55-7121200d5323.webp",
-          "rating": 4.9
+          "rating": 4.8
         }
       ]
     },
@@ -483,7 +516,11 @@
         "веган",
         "быстро"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=3613731706",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64516",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64517",
+        "4": "https://vkusvill.ru/mobile?basket&share=64518"
+      },
       "products": [
         {
           "xml_id": 731,
@@ -500,7 +537,7 @@
           "name": "Смесь ягодная, быстрозамороженная",
           "quantity": 1,
           "unit": "шт",
-          "price": 302,
+          "price": 266,
           "url": "https://vkusvill.ru/goods/smes-yagodnaya-56180/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/5e3a4947-ffc3-4abc-8217-b0dfb2203a5c.webp?1722287697.8916",
           "rating": 4.9
@@ -510,7 +547,7 @@
           "name": "Хлопья овсяные, 400 г",
           "quantity": 1,
           "unit": "шт",
-          "price": 65,
+          "price": 56,
           "url": "https://vkusvill.ru/goods/khlopya-ovsyanye-64315/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/54c6d4d2-7fe1-4aec-a8ab-c800e9a9075c.webp?1708072733.8706",
           "rating": 4.9
@@ -520,7 +557,7 @@
           "name": "Напиток овсяный классический, 1л",
           "quantity": 1,
           "unit": "шт",
-          "price": 128,
+          "price": 155,
           "url": "https://vkusvill.ru/goods/napitok-ovsyanyy-klassicheskiy-95941/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/fdf3d266-d05a-4926-bdf3-b3c87ada55ad.webp",
           "rating": 4.9
@@ -535,7 +572,11 @@
         "дети",
         "перекус"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=2859300619",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64519",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64520",
+        "4": "https://vkusvill.ru/mobile?basket&share=64521"
+      },
       "products": [
         {
           "xml_id": 1573,
@@ -544,8 +585,8 @@
           "unit": "шт",
           "price": 65,
           "url": "https://vkusvill.ru/goods/syrok-tvorozhnyy-s-vanilyu-v-molochnom-shokolade-5-1573/",
-          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/e5ec0784-7e27-4a9d-8c79-31647157ddc4.webp",
-          "rating": 4.9
+          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/327cdb57-c9ba-4bb7-9dce-1ffe0e8fb001.webp?1792269231",
+          "rating": 4.8
         },
         {
           "xml_id": 71367,
@@ -562,7 +603,7 @@
           "name": "Яблоко Гала",
           "quantity": 1,
           "unit": "кг",
-          "price": 150,
+          "price": 145,
           "url": "https://vkusvill.ru/goods/yabloko-gala-15846/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/a5d1ce50-4d16-45ad-bceb-94ca601612ce.webp?1786393870",
           "rating": 4.9
@@ -575,7 +616,7 @@
           "price": 47,
           "url": "https://vkusvill.ru/goods/khlebtsy-grechnevye-zapechennye-26959/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/7361135b-8735-40c5-bf59-b3a6a70397bd.webp?1732406087.8228",
-          "rating": 4.9
+          "rating": 5
         }
       ]
     },
@@ -588,7 +629,11 @@
         "сладкое",
         "гости"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=1515011179",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64522",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64523",
+        "4": "https://vkusvill.ru/mobile?basket&share=64524"
+      },
       "products": [
         {
           "xml_id": 31245,
@@ -598,7 +643,8 @@
           "price": 200,
           "url": "https://vkusvill.ru/goods/chay-chernyy-tseylonskiy-listovoy-31245/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/4aae816f-3572-4453-8486-c1ed4bfe4ca3.webp?1711353262.1767",
-          "rating": 4.9
+          "rating": 4.9,
+          "scalable": false
         },
         {
           "xml_id": 22300,
@@ -608,7 +654,7 @@
           "price": 110,
           "url": "https://vkusvill.ru/goods/kruassan-na-masle-22300/",
           "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/79389798-f586-45a4-87c6-2ad042bb5e09.webp?1783494434",
-          "rating": 5
+          "rating": 4.9
         },
         {
           "xml_id": 21178,
@@ -625,10 +671,11 @@
           "name": "Варенье малиновое",
           "quantity": 1,
           "unit": "шт",
-          "price": 258,
+          "price": 232,
           "url": "https://vkusvill.ru/goods/varene-malinovoe-15759/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/ebb5fff6-d6c8-4096-bcb4-2ffcdc1d0c2b.webp?1734815724.1459",
-          "rating": 4.9
+          "rating": 4.9,
+          "scalable": false
         }
       ]
     },
@@ -640,46 +687,50 @@
         "вечер",
         "закуски"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=136138212",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64529",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64530",
+        "4": "https://vkusvill.ru/mobile?basket&share=64531"
+      },
       "products": [
         {
           "xml_id": 16076,
           "name": "Попкорн соленый",
           "quantity": 1,
           "unit": "шт",
-          "price": 74,
+          "price": 78,
           "url": "https://vkusvill.ru/goods/popkorn-solenyy-16076/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/ec24b8a1-3ea8-4eb7-b445-2c330d4c73c3.webp?1704829913.0265",
           "rating": 5
         },
         {
-          "xml_id": 65291,
-          "name": "Чипсы картофельные \"Сметана-лук\"",
+          "xml_id": 26751,
+          "name": "Чипсы картофельные с солью",
           "quantity": 1,
           "unit": "шт",
-          "price": 152,
-          "url": "https://vkusvill.ru/goods/chipsy-kartofelnye-smetana-luk-65291/",
-          "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/7df8f4ff-ae8f-4daa-8ca4-e5746aa99545.webp?1707856436.6576",
-          "rating": 4.9
+          "price": 145,
+          "url": "https://vkusvill.ru/goods/chipsy-kartofelnye-s-solyu-26751/",
+          "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/d9c4c29c-7c09-4ab2-bfc1-7f7a2d88b596.webp?1710490490.6176",
+          "rating": 4.8
         },
         {
           "xml_id": 71432,
           "name": "Чипсы кукурузные \"Начос с солью\"",
           "quantity": 1,
           "unit": "шт",
-          "price": 162,
+          "price": 165,
           "url": "https://vkusvill.ru/goods/chipsy-kukuruznye-nachos-s-solyu-71432/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/3b074bc8-bbef-4556-91b0-f55cb75ff23a.webp?1710491136.0698",
-          "rating": 4.9
+          "rating": 4.8
         },
         {
-          "xml_id": 22557,
-          "name": "Морс клюквенный, 1 л",
+          "xml_id": 22559,
+          "name": "Морс из смеси брусники, клюквы, черники, 1 л",
           "quantity": 1,
           "unit": "шт",
-          "price": 197,
-          "url": "https://vkusvill.ru/goods/mors-klyukvennyy-22557/",
-          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/c143436f-f0f5-45b2-aad0-7e6145bcef05.webp?1791248789",
+          "price": 202,
+          "url": "https://vkusvill.ru/goods/mors-iz-smesi-brusniki-22559/",
+          "image": "https://img.vkusvill.ru/pim/images/site/site_BigWebP/baa5efd5-9e45-4ca1-8d9a-51a9801f82dc.webp?1788483399",
           "rating": 4.9
         }
       ]
@@ -693,14 +744,18 @@
         "веган",
         "постное"
       ],
-      "cart_url": "https://vkusvill.ru/?share_basket=2769439748",
+      "cart_url": "https://vkusvill.ru/mobile?basket&share=64532",
+      "cart_urls": {
+        "2": "https://vkusvill.ru/mobile?basket&share=64533",
+        "4": "https://vkusvill.ru/mobile?basket&share=64534"
+      },
       "products": [
         {
           "xml_id": 17699,
           "name": "Крупа гречневая ядрица, 900 г",
           "quantity": 1,
           "unit": "шт",
-          "price": 85,
+          "price": 90,
           "url": "https://vkusvill.ru/goods/krupa-grechnevaya-yadritsa-17699/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/3c1c0559-befb-49b7-87a5-80edf083c7d8.webp?1731893395.2713",
           "rating": 4.9
@@ -730,10 +785,10 @@
           "name": "Укроп, 50 г",
           "quantity": 1,
           "unit": "шт",
-          "price": 75,
+          "price": 78,
           "url": "https://vkusvill.ru/goods/ukrop-15194/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/670e0255-f0ad-4318-b9aa-09f7a92e7ea8.webp?1720260763.0004",
-          "rating": 4.8
+          "rating": 4.9
         },
         {
           "xml_id": 37147,
@@ -743,7 +798,8 @@
           "price": 165,
           "url": "https://vkusvill.ru/goods/maslo-podsolnechnoe-rafinirovannoe-37147/",
           "image": "https://img.vkusvill.ru/pim/images/site_BigWebP/637b2ee1-bad1-4c21-8e33-832b0d6d4329.webp?1743376824.4042",
-          "rating": 4.9
+          "rating": 5,
+          "scalable": false
         }
       ]
     }

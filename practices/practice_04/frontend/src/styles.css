@@ -132,6 +132,37 @@ img { display: block; }
   text-decoration: none;
 }
 .cart:hover { background: var(--leaf-deep); }
+.shelf__over-budget { margin-left: 10px; font-size: 0.85rem; font-weight: 400; color: var(--ink-soft); }
+
+/* Порции: сегменты стоят на планке, как товары на полке; выбранный — тёмный ящик. */
+.servings { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 4px 10px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.servings__legend { float: left; padding: 0 0 6px; font-size: 0.95rem; color: var(--ink-soft); }
+.servings__track { display: inline-flex; border-bottom: 4px solid var(--shelf); }
+.servings__option { position: relative; }
+.servings__input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.servings__face {
+  display: block;
+  min-width: 2.75rem;
+  padding: 6px 12px 5px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--ink-soft);
+  border-radius: 8px 8px 0 0;
+}
+.servings__option:hover .servings__face { color: var(--ink); }
+.servings__input:checked + .servings__face { color: var(--paper); background: var(--ink); }
+.servings__input:focus-visible + .servings__face { outline: 3px solid var(--leaf); outline-offset: 3px; }
+.servings__input:disabled { cursor: not-allowed; }
+.servings__input:disabled + .servings__face { color: var(--muted); }
+/* Порции, итог и действия — три строки: длина итога ×4 не двигает кнопку корзины при переключении. */
+.servings,
+.servings + .shelf__total { flex-basis: 100%; }
+/* Причина недоступности: всегда в дереве доступности (aria-describedby), видна при наведении и фокусе в группе. */
+.servings__reason { flex-basis: 100%; font-size: 0.85rem; color: var(--ink-soft); opacity: 0; }
+.servings:hover .servings__reason,
+.servings:focus-within .servings__reason { opacity: 1; }
 
 .link-button {
   font: inherit;
@@ -161,6 +192,7 @@ img { display: block; }
 .receipt__line a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .receipt__dots { flex: 1; min-width: 16px; border-bottom: 2px dotted var(--shelf); transform: translateY(-5px); }
 .receipt__price { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+.receipt__was { font-size: 0.9em; color: var(--muted); }
 
 .notice { padding: 32px 0; font-size: 1.15rem; border-top: 1.5px solid var(--shelf); }
 .notice p { margin: 0 0 12px; }

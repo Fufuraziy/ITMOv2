@@ -12,7 +12,7 @@
   "title": "Завтрак с сырниками",
   "description": "Сырники разогреть на сковороде, подать со сметаной и вареньем…",
   "tags": ["завтрак", "сладкое", "быстро"],
-  "cart_url": "https://vkusvill.ru/?share_basket=3549115194",
+  "cart_url": "https://vkusvill.ru/mobile?basket&share=3549115194",
   "total_price": 1111,
   "products": [
     {
@@ -27,6 +27,8 @@
 
 - `price` — цена за `unit` (шт или кг) в рублях на дату `updated_at` каталога; `quantity` — сколько положить в корзину (для кг — дробное).
 - `total_price` — вычисляет бэкенд: округлённая сумма `price × quantity`. Из файла не берётся.
+- `cart_urls` — ссылки на корзину для ×2 и ×4 (`{"2": "...", "4": "..."}`); `cart_url` — для ×1. Создаёт куратор.
+- `products[i].scalable` — `false`, если количество товара не зависит от порций (кофе, специи); по умолчанию `true`.
 
 ## R1. Каталог при старте
 
@@ -43,9 +45,10 @@
 | `tag` | подборки с этим тегом (без учёта регистра) |
 | `max_price` | целое > 0: `total_price ≤ max_price` |
 | `sort` | `catalog` (по умолчанию, порядок каталога), `price_asc`, `price_desc` |
+| `servings` | `1` (по умолчанию), `2`, `4` — множитель порций; `max_price` и сортировка по цене работают по пересчитанной цене (R7) |
 
 - Ответ `200`: `{"updated_at": "2026-10-06", "total": 2, "collections": [...]}`. Ничего не нашлось — `"collections": []`.
-- Неверный `max_price` или `sort` — `400 {"error": "invalid query: ..."}`.
+- Неверный `max_price`, `sort` или `servings` — `400 {"error": "invalid query: ...", "code": "invalid_query"}`.
 
 ## R3. Правила каталога
 
@@ -55,11 +58,12 @@
 | `title` | 3–80 символов |
 | `description` | 1–500 символов |
 | `tags` | 1–6 тегов, каждый 2–24 символа, без повторов |
-| `cart_url` | начинается с `https://vkusvill.ru/?share_basket=` |
+| `cart_url` | начинается с `https://vkusvill.ru/mobile?basket&share=` |
+| `cart_urls` | ровно ключи `"2"` и `"4"`, значения — по правилу `cart_url` |
 | `products` | 1–20 товаров (лимит корзины ВкусВилла) |
 | `products[i].xml_id` | целое > 0, не повторяется внутри подборки |
 | `products[i].name` | 1–120 символов |
-| `products[i].quantity` | 0.01–40 (лимит корзины ВкусВилла) |
+| `products[i].quantity` | 0.01–40 (лимит корзины ВкусВилла); у масштабируемого товара — 0.01–10 (×4 не больше лимита 40) |
 | `products[i].price` | > 0 |
 | `products[i].url` | начинается с `https://vkusvill.ru/goods/` |
 
@@ -67,7 +71,7 @@
 
 ## R4. Подборка по id — `GET /collections/{id}`
 
-- `200` и подборка; `404 {"error": "collection not found"}`, если нет.
+- `200` и подборка (с учётом `servings`, R7); неверный `servings` — `400` (проверяется раньше id); `404 {"error": "collection not found", "code": "collection_not_found"}`, если нет.
 
 ## R5. Теги — `GET /tags`
 
@@ -79,7 +83,15 @@
 - Запрос только из исключений (`q=-мясо`) — весь каталог без подборок с этим словом.
 - Одиночный `-` и пустые слова игнорируются.
 
+## R7. Порции
+
+- `GET /collections` и `GET /collections/{id}` принимают `servings` ∈ {1, 2, 4}; нет или пусто — 1.
+- Количество масштабируемого товара — `round(quantity × servings, 0.01)`, немасштабируемого — как в каталоге. `total_price` — округлённая до рубля сумма `price × quantity` по пересчитанным количествам.
+- Подборка в ответе содержит `servings`, `cart_url` для этого множителя, у товаров — `base_quantity` и `scalable`, и массив `variants` из трёх элементов (`multiplier` 1, 2, 4) с `total_price`, `quantities` (`{"xml_id": количество}`), `cart_url`, `available`.
+- Корзина по ссылке для множителя k содержит ровно количества варианта k.
+
 ## Прочее
 
 - Любой другой метод — `405`. Создания подборок через API нет.
+- Тело любой ошибки `400`/`404`/`500` содержит `code`: `invalid_query`, `collection_not_found`, `internal_error`.
 - Хранилище — интерфейс `Store` (`List`, `Get`); сейчас `MemoryStore` поверх встроенного каталога, Postgres — следующий шаг.

@@ -1,6 +1,15 @@
 package collections_test
 
-import "vv/collections/internal/collections"
+import (
+	"strconv"
+
+	"vv/collections/internal/collections"
+)
+
+func ptr[T any](v T) *T { return &v }
+
+// cartURL — корректная ссылка на корзину ВкусВилла для тестов.
+func cartURL(n int) string { return "https://vkusvill.ru/mobile?basket&share=9" + strconv.Itoa(n) }
 
 // breakfast и soup — минимальный корректный каталог для тестов.
 func breakfast() collections.Collection {
@@ -9,7 +18,8 @@ func breakfast() collections.Collection {
 		Title:       "Завтрак с сырниками",
 		Description: "Сырники со сметаной и вареньем",
 		Tags:        []string{"завтрак", "сладкое", "быстро"},
-		CartURL:     "https://vkusvill.ru/?share_basket=3549115194",
+		CartURL:     "https://vkusvill.ru/mobile?basket&share=3549115194",
+		CartURLs:    map[string]string{"2": "https://vkusvill.ru/mobile?basket&share=3549115192", "4": "https://vkusvill.ru/mobile?basket&share=3549115198"},
 		Products: []collections.Product{
 			{XMLID: 114976, Name: "Сырники классические жареные", Quantity: 1, Unit: "шт", Price: 306,
 				URL: "https://vkusvill.ru/goods/syrniki-klassicheskie-zharenye-114976/"},
@@ -25,7 +35,8 @@ func soup() collections.Collection {
 		Title:       "Тыквенный крем-суп",
 		Description: "Тыква, сливки и лук — осенний суп на четыре порции",
 		Tags:        []string{"обед", "суп", "осень"},
-		CartURL:     "https://vkusvill.ru/?share_basket=3575424647",
+		CartURL:     "https://vkusvill.ru/mobile?basket&share=3575424647",
+		CartURLs:    map[string]string{"2": "https://vkusvill.ru/mobile?basket&share=3575424642", "4": "https://vkusvill.ru/mobile?basket&share=3575424648"},
 		Products: []collections.Product{
 			{XMLID: 17081, Name: "Тыква очищенная в в/у", Quantity: 2, Unit: "шт", Price: 136,
 				URL: "https://vkusvill.ru/goods/tykva-ochishchennaya-v-v-u-17081/"},

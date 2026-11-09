@@ -15,7 +15,8 @@ func pasta() collections.Collection {
 		Title:       "Паста карбонара",
 		Description: "Спагетти, бекон и пармезан",
 		Tags:        []string{"ужин", "быстро"},
-		CartURL:     "https://vkusvill.ru/?share_basket=679119562",
+		CartURL:     "https://vkusvill.ru/mobile?basket&share=679119562",
+		CartURLs:    map[string]string{"2": "https://vkusvill.ru/mobile?basket&share=679119522", "4": "https://vkusvill.ru/mobile?basket&share=679119544"},
 		Products: []collections.Product{
 			{XMLID: 4001, Name: "Спагетти", Quantity: 2, Unit: "шт", Price: 300,
 				URL: "https://vkusvill.ru/goods/spagetti-4001/"},
@@ -135,5 +136,53 @@ func TestService_Get(t *testing.T) {
 	}
 	if _, err := svc.Get(context.Background(), "c-404"); !errors.Is(err, collections.ErrNotFound) {
 		t.Errorf("Get(unknown) error = %v, want ErrNotFound", err)
+	}
+}
+
+// TestService_SearchServings проверяет R7 (FR-010): бюджет и сортировка по цене для servings.
+// A — 500 ₽, всё масштабируется; B — 200 ₽ масштабируемых + 400 ₽ немасштабируемых; C — как A.
+func TestService_SearchServings(t *testing.T) {
+	col := func(id string, products ...collections.Product) collections.Collection {
+		return collections.Collection{
+			ID: id, Title: "Подборка " + id, Description: "Для проверки порций", Tags: []string{"тест"},
+			CartURL:  cartURL(1),
+			CartURLs: map[string]string{"2": cartURL(2), "4": cartURL(4)},
+			Products: products,
+		}
+	}
+	item := func(id int64, price float64, scalable bool) collections.Product {
+		return collections.Product{XMLID: id, Name: "Товар", Quantity: 1, Unit: "шт", Price: price,
+			URL: "https://vkusvill.ru/goods/t/", Scalable: ptr(scalable)}
+	}
+	store, err := collections.NewMemoryStore([]collections.Collection{
+		col("a", item(1, 500, true)),
+		col("b", item(1, 200, true), item(2, 400, false)),
+		col("c", item(1, 500, true)),
+	})
+	if err != nil {
+		t.Fatalf("NewMemoryStore: %v", err)
+	}
+	svc := collections.NewService(store)
+	tests := []struct {
+		name  string
+		query collections.Query
+		want  []string
+	}{
+		{"×1 дешевле — выше, равные по порядку каталога", collections.Query{Sort: collections.SortPriceAsc}, []string{"a", "c", "b"}},
+		{"×2 дешевле — выше: B 800, A и C 1000", collections.Query{Servings: 2, Sort: collections.SortPriceAsc}, []string{"b", "a", "c"}},
+		{"×2 дороже — выше", collections.Query{Servings: 2, Sort: collections.SortPriceDesc}, []string{"a", "c", "b"}},
+		{"×2 бюджет 900", collections.Query{Servings: 2, MaxPrice: 900}, []string{"b"}},
+		{"×1 бюджет 500", collections.Query{MaxPrice: 500}, []string{"a", "c"}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := svc.Search(context.Background(), tt.query)
+			if err != nil {
+				t.Fatalf("Search: %v", err)
+			}
+			if !reflect.DeepEqual(ids(got), tt.want) {
+				t.Errorf("Search(%+v) = %v, want %v", tt.query, ids(got), tt.want)
+			}
+		})
 	}
 }
