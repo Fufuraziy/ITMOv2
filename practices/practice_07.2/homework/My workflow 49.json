@@ -1,0 +1,783 @@
+{
+  "name": "My workflow 49",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "51525fc6-6892-4b4b-b9b4-7fc59c923847",
+              "name": "",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "1d1ea980-81b4-4d1c-9d00-756f9f0b23a0",
+              "name": "body.action",
+              "value": "={{ $json.body.action }}",
+              "type": "string"
+            },
+            {
+              "id": "99259b18-bc6b-4d77-ba0b-fc74816e7f24",
+              "name": "body.issue.title",
+              "value": "={{ $json.body.issue.title }}",
+              "type": "string"
+            },
+            {
+              "id": "df4c785f-3968-4783-bcf1-a6ce2da8dee5",
+              "name": "body.issue.author_association",
+              "value": "={{ $json.body.issue.author_association }}",
+              "type": "string"
+            },
+            {
+              "id": "673f054a-3fc8-4258-950c-9651119435a2",
+              "name": "body.issue.number",
+              "value": "={{ $json.body.issue.number }}",
+              "type": "number"
+            },
+            {
+              "id": "5b8c928d-b102-4269-8b3a-6b50033950e7",
+              "name": "body.issue.user.login",
+              "value": "={{ $json.body.issue.user.login }}",
+              "type": "string"
+            },
+            {
+              "id": "85a948f0-0624-43c5-b805-02199acea03f",
+              "name": "body",
+              "value": "={{ $json.body }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -608,
+        -32
+      ],
+      "id": "df1d1514-45bd-4dca-81c2-e5fdf852b735",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "64341831-e655-46f1-94b7-6a46955b713c",
+              "leftValue": "={{ $json.body.issue.author_association }}",
+              "rightValue": "None",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        -128,
+        -32
+      ],
+      "id": "ffba31dd-7ce7-4abc-a781-b8562b04c998",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "Fufuraziy",
+          "mode": "list",
+          "cachedResultName": "Fufuraziy",
+          "cachedResultUrl": "https://github.com/Fufuraziy"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "ITMOv2",
+          "mode": "list",
+          "cachedResultName": "ITMOv2",
+          "cachedResultUrl": "https://github.com/Fufuraziy/ITMOv2"
+        },
+        "issueNumber": "={{ $('Edit Fields').item.json.body.issue.number }}",
+        "editFields": {
+          "labels": [
+            {
+              "label": "first-time-contributor"
+            }
+          ]
+        }
+      },
+      "id": "32306772-bcf4-442e-8b3f-2d0c6f4e5ec2",
+      "name": "Add Label to Issue",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        128,
+        -144
+      ],
+      "webhookId": "70d2db56-965b-4f1f-817c-1fbb311320c0",
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "createComment",
+        "owner": {
+          "__rl": true,
+          "value": "Fufuraziy",
+          "mode": "list",
+          "cachedResultName": "Fufuraziy",
+          "cachedResultUrl": "https://github.com/Fufuraziy"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "ITMOv2",
+          "mode": "list",
+          "cachedResultName": "ITMOv2",
+          "cachedResultUrl": "https://github.com/Fufuraziy/ITMOv2"
+        },
+        "issueNumber": "={{ $('Edit Fields').item.json.body.issue.number }}",
+        "body": "=Привет @{{ $('Edit Fields').item.json.body.issue.user.login }}! Рады вашему Issue. "
+      },
+      "id": "a76111bc-4320-414a-8d45-cb6e2c8b23ec",
+      "name": "Add Comment to Issue",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        352,
+        -144
+      ],
+      "webhookId": "70d2db56-965b-4f1f-817c-1fbb311320c0",
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "ef382146-7864-426f-8966-69d48c959b67",
+              "leftValue": "={{ $json.output.confidence }}",
+              "rightValue": 0.8,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        928,
+        -16
+      ],
+      "id": "6bbb3534-c980-4a98-ac12-e10d88c90815",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Call \\'My workflow 56\\'').item.json.output.type }}",
+                    "rightValue": "bug",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e965421f-cb5d-4d16-b648-3ca3e316df44"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "bug"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "34cbc693-20b7-452f-950b-6d89156b916f",
+                    "leftValue": "={{ $('Call \\'My workflow 56\\'').item.json.output.type }}",
+                    "rightValue": "feature",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "feature"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "7ea21ca1-cc19-4d80-b728-b15ecde7f91d",
+                    "leftValue": "={{ $('Call \\'My workflow 56\\'').item.json.output.type }}",
+                    "rightValue": "task",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "task"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "32657127-0dce-47d0-ab94-feba2b810415",
+                    "leftValue": "={{ $('Call \\'My workflow 56\\'').item.json.output.type }}",
+                    "rightValue": "unknown",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "unknown"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": 3
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.5,
+      "position": [
+        1280,
+        -160
+      ],
+      "id": "e887f5c2-d471-4d9a-b897-d83a052f377e",
+      "name": "Switch"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1568,
+        64
+      ],
+      "id": "a1954369-8de4-42e8-8297-a12cdf5e2166",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "3e397e50-6c52-4b44-a660-8d1a65ea2c12",
+              "leftValue": "={{ $json.body.action }}",
+              "rightValue": "opened",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        -400,
+        -32
+      ],
+      "id": "7ca6c604-4291-4b23-a128-c41f23b38467",
+      "name": "If Opened"
+    },
+    {
+      "parameters": {
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "Fufuraziy",
+          "mode": "list",
+          "cachedResultName": "Fufuraziy",
+          "cachedResultUrl": "https://github.com/Fufuraziy"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "ITMOv2",
+          "mode": "list",
+          "cachedResultName": "ITMOv2",
+          "cachedResultUrl": "https://github.com/Fufuraziy/ITMOv2"
+        },
+        "issueNumber": "={{ $('Edit Fields').item.json.body.issue.number }}",
+        "editFields": {
+          "labels": [
+            {
+              "label": "bug"
+            }
+          ]
+        }
+      },
+      "id": "653cd73e-2322-4098-b0bd-4b61a464985f",
+      "name": "Add Label to Issue1",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        -448
+      ],
+      "webhookId": "70d2db56-965b-4f1f-817c-1fbb311320c0",
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "Fufuraziy",
+          "mode": "list",
+          "cachedResultName": "Fufuraziy",
+          "cachedResultUrl": "https://github.com/Fufuraziy"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "ITMOv2",
+          "mode": "list",
+          "cachedResultName": "ITMOv2",
+          "cachedResultUrl": "https://github.com/Fufuraziy/ITMOv2"
+        },
+        "issueNumber": "={{ $('Edit Fields').item.json.body.issue.number }}",
+        "editFields": {
+          "labels": [
+            {
+              "label": "feature"
+            }
+          ]
+        }
+      },
+      "id": "5ebc9302-1b5f-499c-b721-98efb57a42aa",
+      "name": "Add Label to Issue2",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        -272
+      ],
+      "webhookId": "70d2db56-965b-4f1f-817c-1fbb311320c0",
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "Fufuraziy",
+          "mode": "list",
+          "cachedResultName": "Fufuraziy",
+          "cachedResultUrl": "https://github.com/Fufuraziy"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "ITMOv2",
+          "mode": "list",
+          "cachedResultName": "ITMOv2",
+          "cachedResultUrl": "https://github.com/Fufuraziy/ITMOv2"
+        },
+        "issueNumber": "={{ $('Edit Fields').item.json.body.issue.number }}",
+        "editFields": {
+          "labels": [
+            {
+              "label": "task"
+            }
+          ]
+        }
+      },
+      "id": "81c8a92a-ab2b-4d9c-a671-eaba1543ad5b",
+      "name": "Add Label to Issue3",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        -112
+      ],
+      "webhookId": "70d2db56-965b-4f1f-817c-1fbb311320c0",
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "Fufuraziy",
+          "mode": "list",
+          "cachedResultName": "Fufuraziy",
+          "cachedResultUrl": "https://github.com/Fufuraziy"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "ITMOv2",
+          "mode": "list",
+          "cachedResultName": "ITMOv2",
+          "cachedResultUrl": "https://github.com/Fufuraziy/ITMOv2"
+        },
+        "issueNumber": "={{ $('Edit Fields').item.json.body.issue.number }}",
+        "editFields": {
+          "labels": [
+            {
+              "label": "needs-triage"
+            }
+          ]
+        }
+      },
+      "id": "054d1a3b-1a2a-4670-98f5-85fa359bd0ad",
+      "name": "Add Label to Issue4",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1792,
+        64
+      ],
+      "webhookId": "70d2db56-965b-4f1f-817c-1fbb311320c0",
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "fVEmptIxi1wvSir9",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/fVEmptIxi1wvSir9",
+          "cachedResultName": "My workflow 56"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "body": "={{ $json.body }}",
+            "title": "={{ $json.body.issue.title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "body",
+              "displayName": "body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        704,
+        -16
+      ],
+      "id": "8029f79a-d665-4f76-bb72-b485d7a09349",
+      "name": "Call 'My workflow 56'"
+    },
+    {
+      "parameters": {
+        "owner": {
+          "__rl": true,
+          "value": "Fufuraziy",
+          "mode": "list",
+          "cachedResultName": "Fufuraziy",
+          "cachedResultUrl": "https://github.com/Fufuraziy"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "ITMOv2",
+          "mode": "list",
+          "cachedResultName": "ITMOv2",
+          "cachedResultUrl": "https://github.com/Fufuraziy/ITMOv2"
+        },
+        "events": [
+          "issues"
+        ],
+        "options": {}
+      },
+      "name": "Issue Trigger",
+      "type": "n8n-nodes-base.githubTrigger",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        -192
+      ],
+      "id": "87949c9e-d63f-464c-9d92-c35799a69d4c",
+      "webhookId": "96bda048-2b1b-464d-9d9e-9cc190d1008c",
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If Opened",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Add Label to Issue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'My workflow 56'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Label to Issue": {
+      "main": [
+        [
+          {
+            "node": "Add Comment to Issue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Comment to Issue": {
+      "main": [
+        [
+          {
+            "node": "Call 'My workflow 56'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Add Label to Issue1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add Label to Issue2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add Label to Issue3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Opened": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Add Label to Issue4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'My workflow 56'": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Issue Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c47de55e-61c6-457c-b171-52854f312f36",
+  "meta": {
+    "instanceId": "68dbbb4e8fa686c3fd4e9982ade6836edb66976f207553e7ac22df961581c78c"
+  },
+  "nodeGroups": [],
+  "id": "h5z267xthzSCQYBn",
+  "tags": []
+}
