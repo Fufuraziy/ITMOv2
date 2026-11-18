@@ -1,0 +1,617 @@
+{
+  "name": "Weekly Issues stats (practice 7.2)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * MON"
+            }
+          ]
+        }
+      },
+      "id": "00afdf17-a395-4d83-b343-3118fd9f6844",
+      "name": "Every Monday 09:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -256,
+        -160
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "0e59f933-7c1d-4683-95e6-f6fb67d9cf02",
+      "name": "Manual run",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Окно отчёта: последние 7 дней до момента запуска.\n// При запуске по cron (понедельник 09:00) это ровно прошедшая неделя.\nconst REPO = 'Fufuraziy/ITMOv2';\nconst DAY = 24 * 60 * 60 * 1000;\nconst iso = d => d.toISOString().replace(/\\.\\d{3}Z$/, 'Z');\nconst date = d => d.toISOString().slice(0, 10);\n\nconst until = new Date();\nconst since = new Date(until.getTime() - 7 * DAY);\n\nreturn [{ json: {\n  repo: REPO,\n  since: iso(since),\n  until: iso(until),\n  week_start: date(since),\n  week_end: date(until),\n}}];\n"
+      },
+      "id": "f9d76db0-3415-4956-af2b-245dc913365f",
+      "name": "Week range",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/issues",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "=repo:{{ $('Week range').first().json.repo }} is:issue created:{{ $('Week range').first().json.since }}..{{ $('Week range').first().json.until }}"
+            },
+            {
+              "name": "per_page",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7c191cd8-a46b-43b8-a203-d68fbbd62e8a",
+      "name": "GitHub: issues opened",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        192,
+        -64
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/issues",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "=repo:{{ $('Week range').first().json.repo }} is:issue is:closed closed:{{ $('Week range').first().json.since }}..{{ $('Week range').first().json.until }}"
+            },
+            {
+              "name": "per_page",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "58599efc-6485-4916-9d2f-b2d1c57feb35",
+      "name": "GitHub: issues closed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        416,
+        -64
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/issues",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "=repo:{{ $('Week range').first().json.repo }} is:pr created:{{ $('Week range').first().json.since }}..{{ $('Week range').first().json.until }}"
+            },
+            {
+              "name": "per_page",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "86b241a6-168c-4a21-8506-c18681af1424",
+      "name": "GitHub: PRs opened",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        640,
+        -64
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/issues",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "=repo:{{ $('Week range').first().json.repo }} is:pr is:merged merged:{{ $('Week range').first().json.since }}..{{ $('Week range').first().json.until }}"
+            },
+            {
+              "name": "per_page",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "272b07a8-0a7e-4421-8321-46ec93cd0b38",
+      "name": "GitHub: PRs merged",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        864,
+        -64
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Группируем данные четырёх запросов к GitHub по типу и по автору.\nconst w = $('Week range').first().json;\nconst items = name => $(name).first().json.items || [];\n\nconst issuesOpened = items('GitHub: issues opened');\nconst issuesClosed = items('GitHub: issues closed');\nconst prsOpened = items('GitHub: PRs opened');\nconst prsMerged = items('GitHub: PRs merged');\n\nconst TYPES = ['bug', 'feature', 'task', 'needs-triage', 'unlabeled'];\nfunction typeOf(issue) {\n  const names = (issue.labels || []).map(l => String(l.name || l).toLowerCase());\n  for (const t of ['bug', 'feature', 'task']) if (names.includes(t)) return t;\n  if (names.includes('needs-triage') || names.includes('unknown')) return 'needs-triage';\n  return 'unlabeled';\n}\n\n// По типу: сколько Issues каждого типа открыто и закрыто за неделю\nconst by_type = {};\nfor (const t of TYPES) by_type[t] = { opened: 0, closed: 0 };\nfor (const i of issuesOpened) by_type[typeOf(i)].opened++;\nfor (const i of issuesClosed) by_type[typeOf(i)].closed++;\n\n// По автору: активность каждого пользователя за неделю\nconst by_author = {};\nconst bump = (login, key) => {\n  login = login || 'unknown';\n  by_author[login] = by_author[login] || { issues_opened: 0, issues_closed: 0, prs_opened: 0, prs_merged: 0 };\n  by_author[login][key]++;\n};\nfor (const i of issuesOpened) bump(i.user && i.user.login, 'issues_opened');\nfor (const i of issuesClosed) bump(i.user && i.user.login, 'issues_closed');\nfor (const p of prsOpened) bump(p.user && p.user.login, 'prs_opened');\nfor (const p of prsMerged) bump(p.user && p.user.login, 'prs_merged');\n\nconst totals = {\n  issues_opened: issuesOpened.length,\n  issues_closed: issuesClosed.length,\n  prs_opened: prsOpened.length,\n  prs_merged: prsMerged.length,\n};\n\nreturn [{ json: {\n  repo: w.repo, week_start: w.week_start, week_end: w.week_end, since: w.since, until: w.until,\n  totals, by_type, by_author,\n  issues: issuesOpened.map(i => ({ number: i.number, title: i.title, type: typeOf(i), author: i.user && i.user.login, url: i.html_url })),\n}}];\n"
+      },
+      "id": "0fc8f6f1-9727-4879-84ba-40167d1e700a",
+      "name": "Group stats",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "z14514fPdzliSbf4",
+          "mode": "list",
+          "cachedResultName": "weekly_issue_stats",
+          "cachedResultUrl": "/projects/CAEhGEvAnzoLor9x/datatables/z14514fPdzliSbf4"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "week_start",
+              "keyValue": "={{ $json.week_start }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "week_start": "={{ $json.week_start }}",
+            "week_end": "={{ $json.week_end }}",
+            "issues_opened": "={{ $json.totals.issues_opened }}",
+            "issues_closed": "={{ $json.totals.issues_closed }}",
+            "prs_opened": "={{ $json.totals.prs_opened }}",
+            "prs_merged": "={{ $json.totals.prs_merged }}",
+            "by_type": "={{ JSON.stringify($json.by_type) }}",
+            "by_author": "={{ JSON.stringify($json.by_author) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "week_start",
+              "displayName": "week_start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "week_end",
+              "displayName": "week_end",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "by_type",
+              "displayName": "by_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "by_author",
+              "displayName": "by_author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "issues_opened",
+              "displayName": "issues_opened",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "issues_closed",
+              "displayName": "issues_closed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "prs_opened",
+              "displayName": "prs_opened",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "prs_merged",
+              "displayName": "prs_merged",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "9f6ef87e-8aef-4d27-8b90-57517fdea350",
+      "name": "Save week to Data Table",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "z14514fPdzliSbf4",
+          "mode": "list",
+          "cachedResultName": "weekly_issue_stats",
+          "cachedResultUrl": "/projects/CAEhGEvAnzoLor9x/datatables/z14514fPdzliSbf4"
+        },
+        "returnAll": true
+      },
+      "id": "e8721b3f-ba2a-4bb5-97aa-5fcf5df312b0",
+      "name": "Load history",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        -64
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ищем в Data Table предыдущую неделю и считаем Δ.\nconst cur = $('Group stats').first().json;\nconst rows = $input.all().map(i => i.json).filter(r => r && r.week_start);\nconst prev = rows\n  .filter(r => r.week_start < cur.week_start)\n  .sort((a, b) => (a.week_start < b.week_start ? 1 : -1))[0] || null;\n\nconst parse = s => { try { return typeof s === 'string' ? JSON.parse(s) : (s || {}); } catch (e) { return {}; } };\nconst METRICS = ['issues_opened', 'issues_closed', 'prs_opened', 'prs_merged'];\n\nlet delta = null;\nif (prev) {\n  const prevType = parse(prev.by_type);\n  delta = { totals: {}, by_type: {} };\n  for (const m of METRICS) delta.totals[m] = (cur.totals[m] || 0) - (Number(prev[m]) || 0);\n  for (const t of Object.keys(cur.by_type)) {\n    const p = prevType[t] || { opened: 0, closed: 0 };\n    delta.by_type[t] = {\n      opened: cur.by_type[t].opened - (p.opened || 0),\n      closed: cur.by_type[t].closed - (p.closed || 0),\n    };\n  }\n}\n\nreturn [{ json: {\n  ...cur,\n  prev: prev ? {\n    week_start: prev.week_start, week_end: prev.week_end,\n    totals: Object.fromEntries(METRICS.map(m => [m, Number(prev[m]) || 0])),\n    by_type: parse(prev.by_type),\n  } : null,\n  delta,\n  history_rows: rows.length,\n}}];\n"
+      },
+      "id": "49755bab-a4ca-49ad-a63d-e0fd7b29390f",
+      "name": "Compute delta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1744,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ты — аналитик проекта на GitHub. Напиши короткий комментарий (3–5 предложений, на русском) к еженедельной статистике репозитория {{ $json.repo }} за {{ $json.week_start }} — {{ $json.week_end }}.\n\nСтатистика этой недели (итоги, по типам Issues и по авторам):\n{{ JSON.stringify({ totals: $json.totals, by_type: $json.by_type, by_author: $json.by_author }) }}\n\nПрошлая неделя ({{ $json.prev ? $json.prev.week_start + ' — ' + $json.prev.week_end : 'данных нет' }}):\n{{ JSON.stringify($json.prev) }}\n\nИзменения Δ (эта неделя минус прошлая):\n{{ JSON.stringify($json.delta) }}\n\nОтметь главные изменения (рост/падение, какие типы Issues преобладают, сколько ушло в needs-triage), кто самый активный автор, и дай одну практическую рекомендацию команде. Не повторяй таблицу целиком, без Markdown-разметки."
+      },
+      "id": "8029044f-587d-411f-a309-ecf13fc87fdc",
+      "name": "AI weekly comment",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        1952,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "openai/gpt-5.2",
+          "mode": "list",
+          "cachedResultName": "openai/gpt-5.2"
+        },
+        "options": {}
+      },
+      "id": "99e6488d-4a35-431c-96cd-0e7a0bd6c90d",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1952,
+        160
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "3jdMGFI13MKNXTiR",
+          "name": "OpenAI account 14"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Собираем HTML-письмо: итоги с Δ, таблицы по типу и по автору, AI-комментарий.\nconst s = $('Compute delta').first().json;\nconst ai = String($input.first().json.text || '').trim();\n\nconst esc = v => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst fmtDelta = d => {\n  if (d === null || d === undefined) return '<span style=\"color:#888\">—</span>';\n  if (d > 0) return `<span style=\"color:#1a7f37\">▲ +${d}</span>`;\n  if (d < 0) return `<span style=\"color:#cf222e\">▼ ${d}</span>`;\n  return '<span style=\"color:#888\">0</span>';\n};\nconst th = 'style=\"border:1px solid #d0d7de;padding:6px 10px;background:#f6f8fa;text-align:left\"';\nconst td = 'style=\"border:1px solid #d0d7de;padding:6px 10px\"';\nconst table = (head, rows) =>\n  `<table style=\"border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px;margin:8px 0 18px\">` +\n  `<tr>${head.map(h => `<th ${th}>${h}</th>`).join('')}</tr>` +\n  rows.map(r => `<tr>${r.map(c => `<td ${td}>${c}</td>`).join('')}</tr>`).join('') + `</table>`;\n\nconst LABELS = {\n  issues_opened: 'Issues открыто', issues_closed: 'Issues закрыто',\n  prs_opened: 'PR открыто', prs_merged: 'PR смёржено',\n};\nconst d = s.delta;\nconst prevLabel = s.prev ? `${s.prev.week_start} — ${s.prev.week_end}` : 'нет данных';\n\nconst totalsRows = Object.keys(LABELS).map(k => [\n  LABELS[k], `<b>${s.totals[k]}</b>`, s.prev ? s.prev.totals[k] : '—', fmtDelta(d ? d.totals[k] : null),\n]);\nconst typeRows = Object.keys(s.by_type).map(t => [\n  esc(t), s.by_type[t].opened, fmtDelta(d ? d.by_type[t].opened : null),\n  s.by_type[t].closed, fmtDelta(d ? d.by_type[t].closed : null),\n]);\nconst authors = Object.entries(s.by_author).sort((a, b) =>\n  (b[1].issues_opened + b[1].prs_opened) - (a[1].issues_opened + a[1].prs_opened));\nconst authorRows = authors.length\n  ? authors.map(([login, a]) => [esc(login), a.issues_opened, a.issues_closed, a.prs_opened, a.prs_merged])\n  : [['—', 0, 0, 0, 0]];\nconst issueRows = (s.issues || []).map(i => [\n  `<a href=\"${esc(i.url)}\">#${i.number}</a>`, esc(i.title), esc(i.type), esc(i.author),\n]);\n\nconst aiHtml = esc(ai || 'AI-комментарий не сгенерирован.').replace(/\\n/g, '<br>');\n\nconst html = `<div style=\"font-family:Arial,sans-serif;color:#1f2328;max-width:760px\">\n<h2 style=\"margin:0 0 4px\">📊 Еженедельная статистика ${esc(s.repo)}</h2>\n<div style=\"color:#57606a;margin-bottom:16px\">Неделя: <b>${s.week_start} — ${s.week_end}</b> · сравнение с неделей ${esc(prevLabel)}</div>\n\n<h3 style=\"margin:0\">Итоги недели</h3>\n${table(['Метрика', 'Эта неделя', 'Прошлая неделя', 'Δ'], totalsRows)}\n\n<h3 style=\"margin:0\">По типу Issues</h3>\n${table(['Тип', 'Открыто', 'Δ открыто', 'Закрыто', 'Δ закрыто'], typeRows)}\n\n<h3 style=\"margin:0\">По автору</h3>\n${table(['Автор', 'Issues открыл', 'Issues закрыто', 'PR открыл', 'PR смёржено'], authorRows)}\n\n${issueRows.length ? `<h3 style=\"margin:0\">Issues, открытые за неделю</h3>${table(['#', 'Заголовок', 'Тип', 'Автор'], issueRows)}` : ''}\n\n<div style=\"border-left:4px solid #8250df;background:#fbefff;padding:12px 16px;margin:8px 0 16px\">\n  <div style=\"font-weight:bold;margin-bottom:6px\">🤖 AI-комментарий недели</div>\n  <div>${aiHtml}</div>\n</div>\n<div style=\"color:#8c959f;font-size:12px\">Сгенерировано n8n · данные: GitHub Search API · история: Data Table weekly_issue_stats</div>\n</div>`;\n\nreturn [{ json: {\n  subject: `Статистика Issues ${s.repo}: ${s.week_start} — ${s.week_end}`,\n  html,\n}}];\n"
+      },
+      "id": "ae8e6bfb-1ae3-4060-b0c5-add7c38d8ffe",
+      "name": "Build HTML email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2224,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "fufuraziy1@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "b77b685f-5744-4d5e-a653-6fc0c9048dee",
+      "name": "Send weekly report (Gmail)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2432,
+        -64
+      ],
+      "webhookId": "e5287067-8fd5-4669-8433-52945090b39a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wg743ulxL5PwWWNJ",
+          "name": "Gmail account 8"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every Monday 09:00": {
+      "main": [
+        [
+          {
+            "node": "Week range",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual run": {
+      "main": [
+        [
+          {
+            "node": "Week range",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Week range": {
+      "main": [
+        [
+          {
+            "node": "GitHub: issues opened",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub: issues opened": {
+      "main": [
+        [
+          {
+            "node": "GitHub: issues closed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub: issues closed": {
+      "main": [
+        [
+          {
+            "node": "GitHub: PRs opened",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub: PRs opened": {
+      "main": [
+        [
+          {
+            "node": "GitHub: PRs merged",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub: PRs merged": {
+      "main": [
+        [
+          {
+            "node": "Group stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Group stats": {
+      "main": [
+        [
+          {
+            "node": "Save week to Data Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save week to Data Table": {
+      "main": [
+        [
+          {
+            "node": "Load history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load history": {
+      "main": [
+        [
+          {
+            "node": "Compute delta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute delta": {
+      "main": [
+        [
+          {
+            "node": "AI weekly comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI weekly comment",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI weekly comment": {
+      "main": [
+        [
+          {
+            "node": "Build HTML email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build HTML email": {
+      "main": [
+        [
+          {
+            "node": "Send weekly report (Gmail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f13cd082-c106-46b5-b1c1-cc224c3ed3b9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "68dbbb4e8fa686c3fd4e9982ade6836edb66976f207553e7ac22df961581c78c"
+  },
+  "nodeGroups": [],
+  "id": "bytsCntquZL6UUCT",
+  "tags": []
+}
