@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "vkusvill": {
+      "type": "http",
+      "url": "https://mcp001.vkusvill.ru/mcp"
+    },
+    "vv-collections": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["mcp/vv-collections/server.js"],
+      "env": {
+        "VV_API_URL": "http://127.0.0.1:8080"
+      }
+    }
+  }
+}

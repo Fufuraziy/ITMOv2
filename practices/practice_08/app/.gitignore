@@ -1,0 +1,7 @@
+# Портативные инструменты и кэши (scripts/bootstrap-go.sh, scripts/env.sh)
+.tools/
+
+node_modules/
+dist/
+*.log
+.env*

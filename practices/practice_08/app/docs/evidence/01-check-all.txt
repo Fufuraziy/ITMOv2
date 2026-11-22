@@ -1,0 +1,17 @@
+# Полная проверка после разворота в поиск, 2026-10-06 20:24
+$ sh scripts/check.sh
+[backend]
+  ok   gofmt
+  ok   go vet
+  ok   go test
+[frontend]
+  ok   tsc --noEmit
+  ok   vitest
+[mcp]
+  ok   node --test (vv-collections)
+[skill]
+  ok   node --test (tdd-go)
+[hooks]
+  ok   node --test (scripts/hooks)
+CHECK PASS (backend frontend mcp skill hooks)
+exit=0

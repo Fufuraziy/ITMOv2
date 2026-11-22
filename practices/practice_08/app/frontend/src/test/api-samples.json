@@ -1,0 +1,72 @@
+{
+  "_note": "Ответы настоящего Go-бэкенда (POST/GET /suggestions), записаны 2026-11-22. По ним contract.test.ts сверяет подменённые ответы в тестах.",
+  "created": {
+    "status": 201,
+    "body": {
+      "id": 3,
+      "title": "Ужин на двоих",
+      "occasion": "ужин",
+      "budget": 1500,
+      "comment": "паста",
+      "status": "new",
+      "created_at": "2026-11-22T10:59:10.9064354Z"
+    }
+  },
+  "list": {
+    "status": 200,
+    "body": {
+      "total": 3,
+      "suggestions": [
+        {
+          "id": 3,
+          "title": "Ужин на двоих",
+          "occasion": "ужин",
+          "budget": 1500,
+          "comment": "паста",
+          "status": "new",
+          "created_at": "2026-11-22T10:59:10.9064354Z"
+        },
+        {
+          "id": 2,
+          "title": "��������: ����",
+          "occasion": "����",
+          "budget": 1500,
+          "comment": "�����",
+          "status": "new",
+          "created_at": "2026-11-22T10:58:54.8729227Z"
+        },
+        {
+          "id": 1,
+          "title": "Завтрак для всей семьи",
+          "occasion": "",
+          "budget": 1000,
+          "comment": "",
+          "status": "new",
+          "created_at": "2026-11-22T10:54:23.9919834Z"
+        }
+      ]
+    }
+  },
+  "invalid": {
+    "status": 400,
+    "body": {
+      "error": "invalid suggestion",
+      "code": "invalid_suggestion",
+      "fields": {
+        "budget": "out_of_range",
+        "email": "invalid",
+        "title": "too_short"
+      }
+    }
+  },
+  "duplicate": {
+    "status": 409,
+    "body": {
+      "error": "suggestion already exists",
+      "code": "duplicate_suggestion",
+      "fields": {
+        "title": "duplicate"
+      }
+    }
+  }
+}
