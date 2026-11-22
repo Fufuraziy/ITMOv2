@@ -1,0 +1,119 @@
+
+ RUN  v1.6.0 C:/Users/Dragon/Documents/ITMO/vibecoding/practices/practice_08/app/frontend
+
+ ✓ src/features/suggestions/validation.test.ts > validate > корректная форма без ошибок, необязательные поля можно не заполнять
+ ✓ src/features/suggestions/validation.test.ts > validate > { title: '   ' } → ошибка поля title
+ ✓ src/features/suggestions/validation.test.ts > validate > { title: 'Уж' } → ошибка поля title
+ ✓ src/features/suggestions/validation.test.ts > validate > { title: 'яяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяя' } → ошибка поля title
+ ✓ src/features/suggestions/validation.test.ts > validate > { budget: '' } → ошибка поля budget
+ ✓ src/features/suggestions/validation.test.ts > validate > { budget: '299' } → ошибка поля budget
+ ✓ src/features/suggestions/validation.test.ts > validate > { budget: '20001' } → ошибка поля budget
+ ✓ src/features/suggestions/validation.test.ts > validate > { budget: '15,5' } → ошибка поля budget
+ ✓ src/features/suggestions/validation.test.ts > validate > { occasion: 'яяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяя' } → ошибка поля occasion
+ ✓ src/features/suggestions/validation.test.ts > validate > { comment: 'яяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяя' } → ошибка поля comment
+ ✓ src/features/suggestions/validation.test.ts > validate > { email: 'anna@example' } → ошибка поля email
+ ✓ src/features/suggestions/validation.test.ts > validate > границы допустимы: 3 и 80 символов, бюджет 300 и 20 000 (с пробелами)
+ ✓ src/features/suggestions/validation.test.ts > toInput / fromServer > обрезает пробелы и переводит бюджет в число — формат тела POST /suggestions
+ ✓ src/features/suggestions/validation.test.ts > toInput / fromServer > причины сервера превращает в тексты, неизвестные поля пропускает
+ ✓ src/test/contract.test.ts > Тестовые ответы сервера совпадают с реальным API > 201 POST /suggestions
+ ✓ src/test/contract.test.ts > Тестовые ответы сервера совпадают с реальным API > 200 GET /suggestions
+ ✓ src/test/contract.test.ts > Тестовые ответы сервера совпадают с реальным API > 400 invalid_suggestion с причинами по полям
+ ✓ src/test/contract.test.ts > Тестовые ответы сервера совпадают с реальным API > 409 duplicate_suggestion
+ ✓ src/api.test.ts > API errors > carries the status and code of a bad query
+ ✓ src/api.test.ts > API errors > carries the code of an internal error
+ ✓ src/api.test.ts > API errors > has no code when the body is not JSON
+ ✓ src/servings.test.ts > readVariants > returns three variants ordered ×1, ×2, ×4
+ ✓ src/servings.test.ts > readVariants > orders variants by multiplier even if the response does not
+ ✓ src/servings.test.ts > readVariants > returns null when there are no variants (old backend)
+ ✓ src/servings.test.ts > readVariants > returns null when there are two variants
+ ✓ src/servings.test.ts > readVariants > returns null when there are four variants
+ ✓ src/servings.test.ts > readVariants > returns null when multipliers are not 1, 2, 4
+ ✓ src/servings.test.ts > readVariants > returns null when a cart link is empty
+ ✓ src/servings.test.ts > readVariants > returns null when a cart link is missing
+ ✓ src/servings.test.ts > readVariants > returns null when a total is not a number
+ ✓ src/servings.test.ts > readVariants > returns null when a product has no quantity
+ ✓ src/features/search/SearchPage.test.tsx > App > renders heading
+ ✓ src/features/search/SearchPage.test.tsx > App > shows collections with total price, price date and a cart link
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Список заявок > показывает заявки карточками: название, повод, бюджет, комментарий, дата и статус
+ ✓ src/features/search/SearchPage.test.tsx > App > opens the receipt with quantities and product links
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Список заявок > пока список грузится, показывает скелетоны и сообщение для экранного диктора
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Список заявок > пустой ответ: «Заявок пока нет» и кнопка, которая открывает форму
+ ✓ src/features/search/SearchPage.test.tsx > App > searches by text, tag and budget and keeps them in the URL 338ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Список заявок > ошибка загрузки: понятное сообщение и «Повторить», который загружает список заново
+ ✓ src/features/search/SearchPage.test.tsx > App > shows ten most popular tags and hides the rest behind a toggle
+ ✓ src/features/search/SearchPage.test.tsx > App > restores the search from the URL
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Диалог > открывается кнопкой: заголовок и поля с видимыми подписями
+ ✓ src/features/search/SearchPage.test.tsx > App > offers to reset filters when nothing is found 338ms
+ ✓ src/features/search/SearchPage.test.tsx > App > explains what to do when the backend is down
+ ✓ src/features/search/SearchPage.test.tsx > Servings switcher > shows ×2 totals and quantities from the response without new requests
+ ✓ src/features/search/SearchPage.test.tsx > Servings switcher > returns to ×1 as before the switch
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Диалог > закрывается кнопкой «Отмена», крестиком и Escape; фокус возвращается на кнопку 761ms
+ ✓ src/features/search/SearchPage.test.tsx > Servings switcher > keeps other collections at ×1
+ ✓ src/features/search/SearchPage.test.tsx > Servings switcher > remembers the choice when a collection leaves the results and comes back 737ms
+ ✓ src/features/search/SearchPage.test.tsx > Servings switcher > announces the new total
+ ✓ src/App.test.tsx > Основной сценарий: заявка куратору > вкладка «Заявки куратору» → «Предложить подборку» → форма → отправка → заявка первой в списке 2491ms
+ ✓ src/features/search/SearchPage.test.tsx > Servings switcher > marks a total above the chosen budget
+ ✓ src/features/search/SearchPage.test.tsx > Cart for the chosen servings > opens the cart link of the chosen variant
+ ✓ src/features/search/SearchPage.test.tsx > Cart for the chosen servings > keeps ×2 after the cart is opened
+ ✓ src/features/search/SearchPage.test.tsx > Rollout and unavailable servings > keeps the old card when the backend sends no or broken variants
+ ✓ src/features/search/SearchPage.test.tsx > Rollout and unavailable servings > disables an unavailable multiplier and explains why
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Диалог > введённый текст виден в полях и не теряется при выборе повода 1459ms
+ ✓ src/features/search/SearchPage.test.tsx > Rollout and unavailable servings > falls back to ×1 when the chosen multiplier becomes unavailable 381ms
+ ✓ src/features/search/SearchPage.test.tsx > Page states > says it is searching until the first answer arrives
+ ✓ src/App.test.tsx > Основной сценарий: заявка куратору > весь сценарий проходится только с клавиатуры 947ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Диалог > после закрытия и повторного открытия форма снова пустая 538ms
+ ✓ src/App.test.tsx > Основной сценарий: заявка куратору > из пустого поиска «Предложить такую подборку» открывает форму с подставленным названием 314ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Валидация формы > пустая форма: ошибки обязательных полей, запрос не уходит, фокус на первом неверном поле
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Валидация формы > некорректный ввод (короткое название): сообщение под полем, запрос не уходит 406ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Валидация формы > некорректный ввод (отрицательный бюджет): сообщение под полем, запрос не уходит 450ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Валидация формы > некорректный ввод (бюджет больше 20 000): сообщение под полем, запрос не уходит 465ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Валидация формы > некорректный ввод (бюджет не число): сообщение под полем, запрос не уходит 469ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Валидация формы > некорректный ввод (дробный бюджет): сообщение под полем, запрос не уходит 451ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Валидация формы > некорректный ввод (почта без домена): сообщение под полем, запрос не уходит 561ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Валидация формы > подсказка бюджета скрыта, пока под полем ошибка; ошибка уходит, когда поле исправляют 561ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Валидация формы > ошибки полей от сервера (400) показываются под полями, данные остаются 738ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Валидация формы > дубль (409): сообщение под названием, после исправления заявка отправляется 945ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Отправка: загрузка, ошибка, повторная отправка > пока сервер отвечает: «Отправляем…», кнопки и поля заблокированы, введённое видно 593ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Отправка: загрузка, ошибка, повторная отправка > двойной клик и Enter во время ожидания не создают второй запрос 741ms
+stderr | src/features/suggestions/SuggestionsPage.test.tsx > Отправка: загрузка, ошибка, повторная отправка > два submit подряд в одном тике (быстрый Enter) — один запрос
+An update to SuggestionDialog inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to SuggestionDialog inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to SuggestionDialog inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Отправка: загрузка, ошибка, повторная отправка > два submit подряд в одном тике (быстрый Enter) — один запрос 648ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Отправка: загрузка, ошибка, повторная отправка > ошибка сервера (500): сообщение с «Повторить», данные сохранены, повтор отправляет и добавляет заявку 793ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Отправка: загрузка, ошибка, повторная отправка > сеть недоступна: то же сообщение об ошибке, диалог не закрывается 605ms
+ ✓ src/features/suggestions/SuggestionsPage.test.tsx > Успешная отправка > диалог закрывается, уведомление «Заявка отправлена», новая карточка первой с пометкой «новая» 1256ms
+
+ Test Files  7 passed (7)
+      Tests  78 passed (78)
+   Start at  14:20:15
+   Duration  19.77s (transform 732ms, setup 5.64s, collect 8.34s, tests 20.71s, environment 14.67s, prepare 3.10s)
+
