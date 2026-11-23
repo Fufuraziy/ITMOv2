@@ -1,0 +1,790 @@
+{
+  "name": "My workflow 23",
+  "nodes": [
+    {
+      "parameters": {
+        "owner": {
+          "__rl": true,
+          "value": "Fufuraziy",
+          "mode": "list",
+          "cachedResultName": "Fufuraziy",
+          "cachedResultUrl": "https://github.com/Fufuraziy"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "ITMOv2",
+          "mode": "list",
+          "cachedResultName": "ITMOv2",
+          "cachedResultUrl": "https://github.com/Fufuraziy/ITMOv2"
+        },
+        "events": [
+          "pull_request",
+          "issue_comment"
+        ],
+        "options": {}
+      },
+      "id": "b3e4f6b6-3830-45cb-a101-89e2d26657a9",
+      "name": "PR Trigger",
+      "type": "n8n-nodes-base.githubTrigger",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        48
+      ],
+      "webhookId": "c32d7aca-2c61-463e-ad25-75f957c2c625",
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Разбираем событие GitHub и решаем, нужно ли ревью и какой моделью.\n// mode = 'main'  -> основная модель (OpenAI), с проверкой Data Table\n// mode = 'other' -> вторая модель (DeepSeek), команда /make_other_ai_review\nconst MAIN_MODEL = 'openai/gpt-5.2';\nconst OTHER_MODEL = 'deepseek-flash';\n\nconst out = [];\nfor (const item of $input.all()) {\n  const headers = item.json.headers || {};\n  const b = item.json.body || {};\n  const event = headers['x-github-event']\n    || (b.comment ? 'issue_comment' : (b.pull_request ? 'pull_request' : 'unknown'));\n  const repo = b.repository && b.repository.full_name;\n\n  // 1) PR открыт -> основное ревью\n  if (event === 'pull_request' && b.action === 'opened') {\n    out.push({ json: {\n      mode: 'main', trigger: 'pr_opened', model: MAIN_MODEL, repo,\n      pr_number: b.number, pr_url: b.pull_request.html_url,\n    }});\n    continue;\n  }\n\n  // 2) Комментарий к PR с командой\n  if (event === 'issue_comment' && b.action === 'created' && b.issue && b.issue.pull_request) {\n    const command = ((b.comment && b.comment.body) || '').trim().split(/\\s+/)[0];\n    const base = {\n      trigger: 'command', command, repo, pr_number: b.issue.number,\n      pr_url: b.issue.pull_request.html_url || b.issue.html_url,\n      comment_author: b.comment.user && b.comment.user.login,\n    };\n    if (command === '/make_ai_review') {\n      out.push({ json: { ...base, mode: 'main', model: MAIN_MODEL } });\n    } else if (command === '/make_other_ai_review') {\n      out.push({ json: { ...base, mode: 'other', model: OTHER_MODEL } });\n    }\n  }\n}\n// Пустой результат = событие нас не интересует, выполнение на этом заканчивается.\nreturn out;\n"
+      },
+      "id": "18cbed61-54e6-41be-8548-19777761371b",
+      "name": "Route event",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "32a6bdc5-4e8c-411f-8587-5a5ed33e0e66",
+              "leftValue": "={{ $json.mode }}",
+              "rightValue": "other",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "20b12252-3dcc-4c5e-b33d-32bc063b1f02",
+      "name": "Other model?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -96,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "R88b8sFS5KX7ar1W",
+          "mode": "list",
+          "cachedResultName": "reviewed_prs",
+          "cachedResultUrl": "/projects/CAEhGEvAnzoLor9x/datatables/R88b8sFS5KX7ar1W"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "repo",
+              "keyValue": "={{ $json.repo }}"
+            },
+            {
+              "keyName": "pr_number",
+              "keyValue": "={{ $json.pr_number }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "id": "286e83bf-49fe-47bd-943e-c992954cc6d9",
+      "name": "Find PR in Data Table",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        128,
+        176
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5a149229-c25c-486d-9363-c3f06d2bcdf2",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "d84cc1c1-60e4-4ba4-bbb1-4facc5b59c28",
+      "name": "Not reviewed yet?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "createComment",
+        "owner": {
+          "__rl": true,
+          "value": "Fufuraziy",
+          "mode": "list",
+          "cachedResultName": "Fufuraziy",
+          "cachedResultUrl": "https://github.com/Fufuraziy"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "ITMOv2",
+          "mode": "list",
+          "cachedResultName": "ITMOv2",
+          "cachedResultUrl": "https://github.com/Fufuraziy/ITMOv2"
+        },
+        "issueNumber": "={{ $('Route event').first().json.pr_number }}",
+        "body": "=ℹ️ AI-ревью для этого PR уже выполнено (PR есть в Data Table `reviewed_prs`), повторный запуск `{{ $('Route event').first().json.command }}` пропущен."
+      },
+      "id": "e2a1fafb-0860-49c1-be21-0a9bc9dabd60",
+      "name": "Skip: already reviewed",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        576,
+        352
+      ],
+      "webhookId": "c8904de9-03d3-432c-8e6e-e3d4475fda28",
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/{{ $('Route event').first().json.repo }}/pulls/{{ $('Route event').first().json.pr_number }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "options": {}
+      },
+      "id": "1457fa4f-d2fd-483b-9786-72d93a2abea1",
+      "name": "Get PR",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        576,
+        48
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3c7ea83d-232e-480d-8f1c-b490c16ee25a",
+              "leftValue": "={{ $json.state }}",
+              "rightValue": "open",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "b7585f69-ba01-4773-ac09-e48ab880d4a5",
+      "name": "PR is open?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/{{ $('Route event').first().json.repo }}/pulls/{{ $('Route event').first().json.pr_number }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github.v3.diff"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "e55d8888-7e3a-493f-b58f-243a8df68ccd",
+      "name": "Get diff",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1008,
+        48
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Разбиваем unified diff на блоки изменённого кода.\n// Блок = непрерывная последовательность строк +/- внутри одного hunk.\n// Длинные блоки режем по началу функций/классов, чтобы комментарии были точечными.\nconst ctx = $('Route event').first().json;\nconst pr = $('Get PR').first().json;\nconst diff = String($input.first().json.data || '');\n\nconst SPLIT_AT = 12;   // после стольких строк блок можно разрезать на def/class\nconst HARD_MAX = 60;   // жёсткий максимум строк в блоке\nconst MAX_BLOCKS = 25; // ограничение на число запросов к модели\nconst CONTEXT = 3;     // строк контекста перед блоком\nconst GAP = 3;         // изменения, разделённые <= GAP строками контекста, — один блок\n\nconst blocks = [];\nlet path = null, inHunk = false, oldLine = 0, newLine = 0;\nlet cur = null, ctxBuf = [], gap = [];\n\nfunction flush() {\n  gap = [];\n  if (cur && cur.lines.length) {\n    const added = cur.lines.filter(l => l.sign === '+');\n    const removed = cur.lines.filter(l => l.sign === '-');\n    let side, start, end;\n    if (added.length) {\n      side = 'RIGHT'; start = added[0].newNo; end = added[added.length - 1].newNo;\n    } else {\n      side = 'LEFT'; start = removed[0].oldNo; end = removed[removed.length - 1].oldNo;\n    }\n    const fmt = l => `${String(l.sign === '-' ? l.oldNo : l.newNo).padStart(4)} ${l.sign} ${l.code}`;\n    blocks.push({\n      path, side, start_line: start, line: end,\n      added: added.length, removed: removed.length,\n      text: [...cur.context.map(fmt), ...cur.lines.map(fmt)].join('\\n'),\n    });\n  }\n  cur = null;\n}\n\nfor (const raw of diff.split('\\n')) {\n  if (raw.startsWith('diff --git')) { flush(); inHunk = false; path = null; ctxBuf = []; continue; }\n  if (!inHunk) {\n    if (raw.startsWith('+++ ')) {\n      const p = raw.slice(4).trim();\n      path = p === '/dev/null' ? null : p.replace(/^b\\//, '');\n    }\n    if (raw.startsWith('@@')) {\n      const m = raw.match(/^@@ -(\\d+)(?:,\\d+)? \\+(\\d+)(?:,\\d+)? @@/);\n      if (m) { oldLine = +m[1]; newLine = +m[2]; inHunk = true; ctxBuf = []; }\n    }\n    continue;\n  }\n  if (raw.startsWith('@@')) {\n    flush();\n    const m = raw.match(/^@@ -(\\d+)(?:,\\d+)? \\+(\\d+)(?:,\\d+)? @@/);\n    if (m) { oldLine = +m[1]; newLine = +m[2]; ctxBuf = []; }\n    continue;\n  }\n  if (raw.startsWith('\\\\')) continue; // \"\\ No newline at end of file\"\n  const sign = raw[0] === '+' || raw[0] === '-' ? raw[0] : ' ';\n  const code = raw.slice(1);\n  const line = { sign, code, oldNo: oldLine, newNo: newLine };\n\n  if (sign === ' ') {\n    // Короткий разрыв (<= GAP строк контекста) не разрывает блок\n    if (cur) {\n      gap.push(line);\n      if (gap.length > GAP) { flush(); ctxBuf = gap.slice(-CONTEXT); gap = []; }\n    } else {\n      ctxBuf.push(line); if (ctxBuf.length > CONTEXT) ctxBuf.shift();\n    }\n    oldLine++; newLine++;\n    continue;\n  }\n  if (!path) { if (sign === '-') oldLine++; else newLine++; continue; } // удалённый файл\n  if (cur && gap.length) { cur.lines.push(...gap); gap = []; }\n  const startsDef = sign === '+' && /^ {0,4}(async\\s+def|def|class)\\b|^ {0,4}@\\w/.test(code);\n  if (cur && ((startsDef && cur.lines.length >= SPLIT_AT) || cur.lines.length >= HARD_MAX)) {\n    const tail = cur.lines.slice(-CONTEXT);\n    flush();\n    ctxBuf = tail;\n  }\n  if (!cur) cur = { context: ctxBuf.slice(), lines: [] };\n  cur.lines.push(line);\n  if (sign === '-') oldLine++; else newLine++;\n}\nflush();\n\nreturn blocks.slice(0, MAX_BLOCKS).map((b, i) => ({ json: {\n  ...b, index: i + 1, total: Math.min(blocks.length, MAX_BLOCKS),\n  mode: ctx.mode, model: ctx.model, repo: ctx.repo, pr_number: ctx.pr_number,\n  head_sha: pr.head.sha,\n}}));\n"
+      },
+      "id": "c93491ff-c773-4a22-9411-f41e559e6e39",
+      "name": "Split diff into blocks",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0a6e31a6-db74-4518-9450-f0184478e7a3",
+              "leftValue": "={{ $('Route event').first().json.mode }}",
+              "rightValue": "other",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "ae66c67b-fed3-4da5-aab7-72ad53b74093",
+      "name": "Use DeepSeek?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1456,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ты — senior Python-разработчик и делаешь code review ОДНОГО блока изменений из pull request.\n\nФайл: {{ $json.path }}\nСтроки: {{ $json.start_line }}–{{ $json.line }} (блок {{ $json.index }} из {{ $json.total }})\nФормат: номер строки, знак (+ добавлено, - удалено, пробел — контекст), код.\n\n<diff>\n{{ $json.text }}\n</diff>\n\nОцени ТОЛЬКО изменённые строки (+ и -). Ищи баги, проблемы безопасности, регрессии, проблемы производительности и нарушения best practices.\nОтвечай на русском в Markdown, кратко (до 120 слов): перечисли проблемы с номерами строк и предложи конкретное исправление (можно коротким фрагментом кода).\nНе пересказывай код и не хвали его. Если проблем нет — ответь ровно одним словом: LGTM",
+        "options": {}
+      },
+      "id": "0a05346c-6209-4e38-afd6-e852e2f35d98",
+      "name": "Review block (OpenAI)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        1696,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "openai/gpt-5.2",
+          "mode": "list",
+          "cachedResultName": "openai/gpt-5.2"
+        },
+        "options": {}
+      },
+      "id": "68fb8d0c-ff85-4750-bd3b-e79522ffe975",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1696,
+        368
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "3jdMGFI13MKNXTiR",
+          "name": "OpenAI account 14"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ты — senior Python-разработчик и делаешь code review ОДНОГО блока изменений из pull request.\n\nФайл: {{ $json.path }}\nСтроки: {{ $json.start_line }}–{{ $json.line }} (блок {{ $json.index }} из {{ $json.total }})\nФормат: номер строки, знак (+ добавлено, - удалено, пробел — контекст), код.\n\n<diff>\n{{ $json.text }}\n</diff>\n\nОцени ТОЛЬКО изменённые строки (+ и -). Ищи баги, проблемы безопасности, регрессии, проблемы производительности и нарушения best practices.\nОтвечай на русском в Markdown, кратко (до 120 слов): перечисли проблемы с номерами строк и предложи конкретное исправление (можно коротким фрагментом кода).\nНе пересказывай код и не хвали его. Если проблем нет — ответь ровно одним словом: LGTM",
+        "options": {}
+      },
+      "id": "6a2d0ef0-c374-4054-9140-9f57df430d79",
+      "name": "Review block (DeepSeek)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        1696,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "model": "deepseek-flash",
+        "options": {}
+      },
+      "id": "01da5e4b-4996-45c8-9b28-25fac9649b40",
+      "name": "DeepSeek Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        -352
+      ],
+      "credentials": {
+        "deepSeekApi": {
+          "id": "Y5YBUPjkuMN9ioxz",
+          "name": "DeepSeek account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Собираем один review с точечными комментариями к каждому блоку.\nconst ctx = $('Route event').first().json;\nconst pr = $('Get PR').first().json;\nconst blocks = $('Split diff into blocks').all().map(i => i.json);\nconst outputs = $input.all().map(i => String(i.json.output ?? i.json.text ?? '').trim());\nconst modelLabel = ctx.mode === 'other' ? `DeepSeek (${ctx.model})` : `OpenAI (${ctx.model})`;\n\nlet withIssues = 0;\nconst comments = blocks.map((b, i) => {\n  const text = outputs[i] || '';\n  const ok = !text || /^LGTM[.!]?$/i.test(text);\n  if (!ok) withIssues++;\n  const c = {\n    path: b.path,\n    side: b.side,\n    line: b.line,\n    body: (ok ? '✅ Замечаний к этому блоку нет.' : text) + `\\n\\n<sub>🤖 ${modelLabel} · блок ${b.index}/${b.total}</sub>`,\n  };\n  if (b.start_line && b.start_line < b.line) { c.start_line = b.start_line; c.start_side = b.side; }\n  return c;\n});\n\nconst body = [\n  `## 🤖 AI code review — ${modelLabel}`,\n  '',\n  blocks.length\n    ? `Проверено блоков изменённого кода: **${blocks.length}**, с замечаниями: **${withIssues}**. Комментарии оставлены к конкретным строкам.`\n    : 'В diff не найдено изменённого кода для ревью.',\n  '',\n  `<sub>Запуск: ${ctx.trigger === 'command' ? '`' + ctx.command + '`' : 'открытие PR'}</sub>`,\n].join('\\n');\n\nreturn [{ json: { commit_id: pr.head.sha, event: 'COMMENT', body, comments } }];\n"
+      },
+      "id": "d6ce8011-bb12-4ed1-a996-dddc9cc3d39e",
+      "name": "Build inline review",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2016,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.github.com/repos/{{ $('Route event').first().json.repo }}/pulls/{{ $('Route event').first().json.pr_number }}/reviews",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "bb6c9570-5be7-44d4-a9b0-94db19908cab",
+      "name": "Publish review",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2224,
+        48
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "R88b8sFS5KX7ar1W",
+          "mode": "list",
+          "cachedResultName": "reviewed_prs",
+          "cachedResultUrl": "/projects/CAEhGEvAnzoLor9x/datatables/R88b8sFS5KX7ar1W"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "repo": "={{ $('Route event').first().json.repo }}",
+            "pr_number": "={{ $('Route event').first().json.pr_number }}",
+            "model": "={{ $('Route event').first().json.model }}",
+            "pr_url": "={{ $('Route event').first().json.pr_url }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "repo",
+              "displayName": "repo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "model",
+              "displayName": "model",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "pr_url",
+              "displayName": "pr_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "pr_number",
+              "displayName": "pr_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "4ecbc8e8-67c8-4e83-85fd-0e9b37472e68",
+      "name": "Save PR to Data Table",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        2448,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "Fufuraziy",
+          "mode": "list",
+          "cachedResultName": "Fufuraziy",
+          "cachedResultUrl": "https://github.com/Fufuraziy"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "ITMOv2",
+          "mode": "list",
+          "cachedResultName": "ITMOv2",
+          "cachedResultUrl": "https://github.com/Fufuraziy/ITMOv2"
+        },
+        "issueNumber": "={{ $('Route event').first().json.pr_number }}",
+        "editFields": {
+          "labels": [
+            {
+              "label": "ReviewedByAI"
+            }
+          ]
+        }
+      },
+      "id": "4326f09d-d299-45a4-9b83-15b95052d496",
+      "name": "Add Label to PR1",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        2672,
+        48
+      ],
+      "webhookId": "70d2db56-965b-4f1f-817c-1fbb311320c0",
+      "credentials": {
+        "githubApi": {
+          "id": "XhUzZXj772DaH8pA",
+          "name": "GitHub account 18"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "PR Trigger": {
+      "main": [
+        [
+          {
+            "node": "Route event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route event": {
+      "main": [
+        [
+          {
+            "node": "Other model?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Other model?": {
+      "main": [
+        [
+          {
+            "node": "Get PR",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Find PR in Data Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find PR in Data Table": {
+      "main": [
+        [
+          {
+            "node": "Not reviewed yet?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Not reviewed yet?": {
+      "main": [
+        [
+          {
+            "node": "Get PR",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip: already reviewed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get PR": {
+      "main": [
+        [
+          {
+            "node": "PR is open?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR is open?": {
+      "main": [
+        [
+          {
+            "node": "Get diff",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get diff": {
+      "main": [
+        [
+          {
+            "node": "Split diff into blocks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split diff into blocks": {
+      "main": [
+        [
+          {
+            "node": "Use DeepSeek?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Use DeepSeek?": {
+      "main": [
+        [
+          {
+            "node": "Review block (DeepSeek)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Review block (OpenAI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Review block (OpenAI)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Review block (DeepSeek)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Review block (OpenAI)": {
+      "main": [
+        [
+          {
+            "node": "Build inline review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Review block (DeepSeek)": {
+      "main": [
+        [
+          {
+            "node": "Build inline review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build inline review": {
+      "main": [
+        [
+          {
+            "node": "Publish review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish review": {
+      "main": [
+        [
+          {
+            "node": "Save PR to Data Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save PR to Data Table": {
+      "main": [
+        [
+          {
+            "node": "Add Label to PR1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f967a7c6-875f-444c-9d6c-2c7a995357a4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "68dbbb4e8fa686c3fd4e9982ade6836edb66976f207553e7ac22df961581c78c"
+  },
+  "nodeGroups": [],
+  "id": "HqV7oUh1XVvZytrc",
+  "tags": []
+}
