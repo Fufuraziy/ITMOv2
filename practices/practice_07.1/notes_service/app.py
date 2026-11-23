@@ -154,8 +154,7 @@ def validate_note_payload(data):
     if not isinstance(title, str) or not title.strip():
         raise BadRequest("title is required")
     body = data.get("body", "")
-    if not isinstance(body, str):
-        raise BadRequest("body must be a string")
+    
     tags = data.get("tags", [])
     if not isinstance(tags, list) or not all(isinstance(t, str) for t in tags):
         raise BadRequest("tags must be a list of strings")
